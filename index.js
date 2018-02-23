@@ -22,7 +22,7 @@ wss.broadcast = function broadcast(data) {
 
 wss.on('connection', function connection() {
   scanner.on('foundPairs', (pairs) => {
-    wss.broadcast(pairs)
+    wss.broadcast(JSON.stringify(pairs))
   })
 })
 

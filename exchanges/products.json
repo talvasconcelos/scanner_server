@@ -1,6 +1,6 @@
 {
  "timezone": "UTC",
- "serverTime": 1519410337673,
+ "serverTime": 1519410796629,
  "rateLimits": [
   {
    "rateLimitType": "REQUESTS",
