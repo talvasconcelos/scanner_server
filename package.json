@@ -1,0 +1,22 @@
+{
+  "name": "scanner",
+  "version": "1.0.0",
+  "description": "Binance crypto scanner",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "binance": "^1.3.3",
+    "continuous": "^0.1.2",
+    "lodash": "^4.17.5",
+    "moment": "^2.20.1",
+    "polka": "^0.3.4",
+    "socket.io": "^2.0.4",
+    "technicalindicators": "^1.1.4",
+    "uws": "^9.14.0",
+    "ws": "^4.1.0"
+  }
+}
