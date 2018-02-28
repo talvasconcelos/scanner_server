@@ -4,9 +4,9 @@ const EventEmitter = require('events')
 const continuous = require('continuous')
 const Utils = require('../lib/utils')
 const update = require('./update_products')
-const products = fs.existsSync( './products.json') ?
-  require('./products.json') :
-  update.products()
+// const products = fs.existsSync( './products.json') ?
+//   require('./products.json') :
+//   update.products()
 const tech = require('technicalindicators')
 const api = require('binance')
 const lstm = require('../lib/lstm')
@@ -160,7 +160,7 @@ class Scanner extends EventEmitter {
       if(this.pairs.length)
         return this.advise()
       console.log('No good trades at the moment!')
-      this.emit('foundPairs', 'No good trades at the moment!')
+      //this.emit('foundPairs', 'No good trades at the moment!')
       return
     })
     .catch(err => {
@@ -170,7 +170,7 @@ class Scanner extends EventEmitter {
 
   advise(){
     let pair = this.pairs.sort((x, y) => (x.gap - y.gap || y.ai - x.ai))
-    console.log(pair)
+    //console.log(pair)
     this.emit('foundPairs', pair)
     return
   }

@@ -1,6 +1,9 @@
 const polka = require('polka')
 const WebSocket = require('ws')
 const Scanner = require('./exchanges/binance')
+const Slimbot = require('slimbot');
+const slimbot = new Slimbot('553917479:AAH0mRltjDvIJJLEPbF43bigmBQLRImA6wc')
+slimbot.startPolling()
 
 const { PORT=3000 } = process.env
 const app = polka();
@@ -10,24 +13,51 @@ const wss = new WebSocket.Server({
 })
 
 const scanner = new Scanner()
-scanner.start_scanning({time: 60000})
+scanner.start_scanning({time: 900000})
 
 wss.broadcast = function broadcast(data) {
   wss.clients.forEach(function each(client) {
     if (client.readyState === WebSocket.OPEN) {
-      client.send(data)
+      client.send(data, (err) => {
+        console.error(err)
+      })
     }
   })
 }
 
-wss.on('connection', function connection() {
-  scanner.on('foundPairs', (pairs) => {
-    wss.broadcast(JSON.stringify(pairs))
+function telegramBroadcast(found){
+  found.map((cur, i) => {
+    let currency = cur.pair.slice(-3)
+    let aiScore = Math.round((cur.ai * 100) * 100) / 100
+    let _pair = cur.pair.split(currency)[0]
+    let urlPair = _pair + '_' + currency
+    //let msg = '*Binance Scanner(WIP):* \n *Currency: *' + config.general.base + '\n *Asset: *' + _pair + '\n *Last Close @:*' + cur.close + '\n *RSI:* ' + cur.rsi + '\n *Volume:* ' + cur.vol + '\n *Rank:* #' + (i + 1) + '\n *AI Score: *' + aiScore + '\n [See it on Binance](https://www.binance.com/tradeDetail.html?symbol=' + urlPair + ')'
+    let msg = `*Binance Scanner(WIP):*
+    *Currency:* ${currency}
+    *Asset:* ${_pair}
+    *Last Close @:* ${cur.close}
+    *RSI:* ${cur.rsi}
+    *Volume:* ${cur.vol || 1}
+    *Rank:* #${i + 1}
+    *AI Score:* ${aiScore}%
+    [See it on Binance](https://www.binance.com/tradeDetail.html?symbol=${urlPair})`
+    // *AI Score:* ${aiScore}
+
+    slimbot.sendMessage('@trexMarketScan', msg, {parse_mode: 'Markdown'})
   })
+}
+
+scanner.on('foundPairs', (pairs) => {
+  wss.broadcast(JSON.stringify(pairs))
+  telegramBroadcast(pairs)
+})
+
+wss.on('connection', function connection(ws) {
+  console.log('Client connected!')
 })
 
 app.listen(PORT).then(_ => {
-    console.log(`> Running on localhost:${PORT}`)
+  console.log(`> Running on localhost:${PORT}`)
 })
 
 /*
