@@ -54,7 +54,7 @@ scanner.on('foundPairs', (pairs) => {
   telegramBroadcast(pairs)
 })
 
-wss.on('connection', function connection(ws) {
+wss.on('connection', function connection() {
   console.log('Client connected!')
 })
 
