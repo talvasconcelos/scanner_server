@@ -49,8 +49,9 @@ function telegramBroadcast(found){
 }
 
 scanner.on('foundPairs', (pairs) => {
+  console.log(pairs)
   wss.broadcast(JSON.stringify(pairs))
-  //telegramBroadcast(pairs)
+  telegramBroadcast(pairs)
 })
 
 wss.on('connection', function connection(ws) {
