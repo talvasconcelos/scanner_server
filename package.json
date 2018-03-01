@@ -16,5 +16,8 @@
     "slimbot": "^0.7.11",
     "technicalindicators": "^1.1.4",
     "ws": "^4.1.0"
+  },
+  "devDependencies": {
+    "dotenv": "^5.0.1"
   }
 }

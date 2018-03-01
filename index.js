@@ -1,3 +1,4 @@
+require('dotenv').config()
 const polka = require('polka')
 const WebSocket = require('ws')
 const Scanner = require('./exchanges/binance')
@@ -13,7 +14,7 @@ const wss = new WebSocket.Server({
 })
 
 const scanner = new Scanner()
-scanner.start_scanning({time: 900000})
+scanner.start_scanning({time: 120000})
 
 wss.broadcast = function broadcast(data) {
   wss.clients.forEach(function each(client) {
@@ -49,7 +50,7 @@ function telegramBroadcast(found){
 
 scanner.on('foundPairs', (pairs) => {
   wss.broadcast(JSON.stringify(pairs))
-  telegramBroadcast(pairs)
+  //telegramBroadcast(pairs)
 })
 
 wss.on('connection', function connection(ws) {
