@@ -1,4 +1,4 @@
-require('dotenv').config()
+process.env.NODE_ENV !== 'production' ? require('dotenv').config() : null
 const polka = require('polka')
 const WebSocket = require('ws')
 const Scanner = require('./exchanges/binance')
