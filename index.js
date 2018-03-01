@@ -14,7 +14,7 @@ const wss = new WebSocket.Server({
 })
 
 const scanner = new Scanner()
-scanner.start_scanning({time: 120000})
+scanner.start_scanning({time: 900000})
 
 wss.broadcast = function broadcast(data) {
   wss.clients.forEach(function each(client) {
@@ -29,7 +29,7 @@ wss.broadcast = function broadcast(data) {
 function telegramBroadcast(found){
   found.map((cur, i) => {
     let currency = cur.pair.slice(-3)
-    let aiScore = Math.round((cur.ai * 100) * 100) / 100
+    let aiScore = Math.round((cur.ai * 100) * 10) / 10
     let _pair = cur.pair.split(currency)[0]
     let urlPair = _pair + '_' + currency
     //let msg = '*Binance Scanner(WIP):* \n *Currency: *' + config.general.base + '\n *Asset: *' + _pair + '\n *Last Close @:*' + cur.close + '\n *RSI:* ' + cur.rsi + '\n *Volume:* ' + cur.vol + '\n *Rank:* #' + (i + 1) + '\n *AI Score: *' + aiScore + '\n [See it on Binance](https://www.binance.com/tradeDetail.html?symbol=' + urlPair + ')'
@@ -40,7 +40,7 @@ function telegramBroadcast(found){
     *RSI:* ${cur.rsi}
     *Volume:* ${cur.vol || 1}
     *Rank:* #${i + 1}
-    *AI Score:* ${aiScore}%
+    *AI Prediction:* ${aiScore}% (prob. to move up)
     [See it on Binance](https://www.binance.com/tradeDetail.html?symbol=${urlPair})`
     // *AI Score:* ${aiScore}
 
