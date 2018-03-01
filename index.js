@@ -2,7 +2,7 @@ const polka = require('polka')
 const WebSocket = require('ws')
 const Scanner = require('./exchanges/binance')
 const Slimbot = require('slimbot');
-const slimbot = new Slimbot('553917479:AAH0mRltjDvIJJLEPbF43bigmBQLRImA6wc')
+const slimbot = new Slimbot(process.env.TELEGRAM_TOKEN)
 slimbot.startPolling()
 
 const { PORT=3000 } = process.env
