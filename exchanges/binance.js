@@ -101,7 +101,7 @@ class Scanner extends EventEmitter {
           // if(Math.round(aiPrediction) !== 1){
           //   return resolve()
           // }
-          if(!(macd[1].MACD < 0 && macd[0].MACD > 0)){
+          if(macd[0].MACD < 0){
             return resolve()
           }
           if(relVol[0] < 2){
