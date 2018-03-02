@@ -60,7 +60,7 @@ class Scanner extends EventEmitter {
     return tech.ROC.calculate({values: close, period: 10}).reverse()
   }
 
-  macd(ohcl){
+  macd(ohlc){
     let close = ohlc.map(cur => Number(cur.close))
     return tech.MACD.calculate({
       values: close,
