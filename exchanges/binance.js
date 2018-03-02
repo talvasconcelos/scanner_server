@@ -60,6 +60,18 @@ class Scanner extends EventEmitter {
     return tech.ROC.calculate({values: close, period: 10}).reverse()
   }
 
+  macd(ohcl){
+    let close = ohlc.map(cur => Number(cur.close))
+    return tech.MACD.calculate({
+      values: close,
+      fastPeriod: 12,
+      slowPeriod: 26,
+      signalPeriod: 9,
+      SimpleMAOscillator: false,
+      SimpleMASignal: false
+    }).reverse()
+  }
+
   rvol(ohlc){
     let volume = ohlc.map(cur => Number(cur.volume))
     let last = ohlc.pop()
@@ -78,6 +90,7 @@ class Scanner extends EventEmitter {
           let relVol = this.rvol(res)
           let roc = this.roc(res)
           let rsi = this.rsi(res)
+          let macd = this.macd(res)
 
           //LSTM
           res.reverse()
@@ -88,6 +101,9 @@ class Scanner extends EventEmitter {
           // if(Math.round(aiPrediction) !== 1){
           //   return resolve()
           // }
+          if(!(macd[1].MACD < 0 && macd[0].MACD > 0)){
+            return resolve()
+          }
           if(relVol[0] < 2){
             return resolve()
           }
@@ -129,7 +145,7 @@ class Scanner extends EventEmitter {
       this._timer = timer
       timer.on('started', () => {
         this._is_scanning = true
-        console.log('Scanner started!', new Date())
+        console.log('Scanner started!', this.client.time())
         self.emit('scanStart')
         return resolve(true)
       })
@@ -144,7 +160,7 @@ class Scanner extends EventEmitter {
   }
 
   _scan(){
-    console.log('New scan:', new Date())
+    console.log('New scan:', this.client.time())
     let out = []
     this.client.exchangeInfo()
     .then(res => {
