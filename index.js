@@ -10,7 +10,7 @@ slimbot.startPolling()
 const { PORT=3000 } = process.env
 const app = polka();
 
-app.use((req, res) => res.send(new Date()))
+app.use((req, res) => res.sendFile('./index.html'))
 
 const wss = new WebSocket.Server({
   server: app.server
@@ -60,11 +60,28 @@ scanner.on('foundPairs', (pairs) => {
 wss.on('connection', (ws) => {
   console.log('Client connected!')
   ws.on('close', () => console.log('Client disconnected!'))
+  ws.isAlive = true
+  ws.on('pong', heartbeat)
 })
 
 app.listen(PORT).then(_ => {
   console.log(`> Running on localhost:${PORT}`)
 })
+
+function noop() {}
+
+function heartbeat() {
+  this.isAlive = true
+}
+
+const interval = setInterval(function ping() {
+  wss.clients.forEach((ws) => {
+    if (ws.isAlive === false) return ws.terminate()
+
+    ws.isAlive = false
+    ws.ping(noop)
+  });
+}, 30000)
 
 /*
 // Paste this on chrome's console for checking WebSocket msg
