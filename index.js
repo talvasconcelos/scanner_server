@@ -20,7 +20,7 @@ wss.broadcast = function broadcast(data) {
   wss.clients.forEach(function each(client) {
     if (client.readyState === WebSocket.OPEN) {
       client.send(data, (err) => {
-        console.error(err)
+        if(err) console.error(err)
       })
     }
   })
@@ -54,8 +54,13 @@ scanner.on('foundPairs', (pairs) => {
   telegramBroadcast(pairs)
 })
 
-wss.on('connection', function connection() {
+setInterval(() => {
+  console.log('Keep alive!')
+}, 300000)
+
+wss.on('connection', function connection(ws) {
   console.log('Client connected!')
+  ws.on('close', () => console.log('Disconnected!'))
 })
 
 app.listen(PORT).then(_ => {

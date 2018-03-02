@@ -85,18 +85,18 @@ class Scanner extends EventEmitter {
           if(res.quoteAssetVolume < this.volume){
             return resolve()
           }
-          if(Math.round(aiPrediction) !== 1){
+          // if(Math.round(aiPrediction) !== 1){
+          //   return resolve()
+          // }
+          if(relVol[0] < 2){
             return resolve()
           }
-          // if(relVol[1] < 2){
-          //   return resolve()
-          // }
-          // if(roc[1] < 0){
-          //   return resolve()
-          // }
-          // if(rsi[1] < 45 && !Utils.fromBellow(res[1], res[2])){
-          //   return resolve()
-          // }
+          if(roc[0] < 0){
+            return resolve()
+          }
+          if(rsi[0] < 45 && !Utils.fromBellow(res[0], res[1])){
+            return resolve()
+          }
           let output = {
             pair,
             close: res[0].close,
