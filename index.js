@@ -54,10 +54,6 @@ scanner.on('foundPairs', (pairs) => {
   telegramBroadcast(pairs)
 })
 
-setInterval(() => {
-  console.log('Keep alive!')
-}, 300000)
-
 wss.on('connection', function connection(ws) {
   console.log('Client connected!')
   ws.on('close', () => console.log('Disconnected!'))
