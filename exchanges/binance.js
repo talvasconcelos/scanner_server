@@ -145,7 +145,7 @@ class Scanner extends EventEmitter {
       this._timer = timer
       timer.on('started', () => {
         this._is_scanning = true
-        console.log('Scanner started!', this.client.time())
+        this.client.time().then(res => console.log('Scanner started!', new Date(res)))
         self.emit('scanStart')
         return resolve(true)
       })
@@ -160,7 +160,7 @@ class Scanner extends EventEmitter {
   }
 
   _scan(){
-    console.log('New scan:', this.client.time())
+    this.client.time().then(res => console.log('New scan:', new Date(res)))
     let out = []
     this.client.exchangeInfo()
     .then(res => {
