@@ -1,3 +1,4 @@
+'use strict'
 process.env.NODE_ENV !== 'production' ? require('dotenv').config() : null
 const polka = require('polka')
 const WebSocket = require('ws')
@@ -8,6 +9,8 @@ slimbot.startPolling()
 
 const { PORT=3000 } = process.env
 const app = polka();
+
+app.use((req, res) => res.send(new Date()))
 
 const wss = new WebSocket.Server({
   server: app.server
@@ -54,9 +57,9 @@ scanner.on('foundPairs', (pairs) => {
   telegramBroadcast(pairs)
 })
 
-wss.on('connection', function connection(ws) {
+wss.on('connection', (ws) => {
   console.log('Client connected!')
-  ws.on('close', () => console.log('Disconnected!'))
+  ws.on('close', () => console.log('Client disconnected!'))
 })
 
 app.listen(PORT).then(_ => {
