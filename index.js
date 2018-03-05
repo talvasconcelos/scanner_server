@@ -31,7 +31,9 @@ wss.on('connection', (ws) => {
   console.log('Client connected!')
   ws.on('close', () => console.log('Client disconnected!'))
   ws.isAlive = true
-  if(pairState !== 'undefined') wss.broadcast(JSON.stringify(pairState))
+  if(pairState !== 'undefined') {
+    ws.send(JSON.stringify(pairState))
+  }
   ws.on('pong', heartbeat)
 })
 
