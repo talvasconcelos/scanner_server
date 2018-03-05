@@ -13,6 +13,7 @@ const app = polka()
 app.use((req, res) => res.end(new Date().toTimeString()))
 app.listen(PORT).then( _ => console.log(`Listening on ${ PORT }`))
 
+let pairState
 //Websocket
 const wss = new WebSocket.Server({server: app.server})
 
@@ -30,6 +31,7 @@ wss.on('connection', (ws) => {
   console.log('Client connected!')
   ws.on('close', () => console.log('Client disconnected!'))
   ws.isAlive = true
+  if(pairState !== 'undefined') wss.broadcast(JSON.stringify(pairState))
   ws.on('pong', heartbeat)
 })
 
@@ -55,7 +57,7 @@ const slimbot = new Slimbot(process.env.TELEGRAM_TOKEN)
 slimbot.startPolling()
 
 const scanner = new Scanner()
-scanner.start_scanning({time: 120000})
+scanner.start_scanning({time: 900000})
 
 function telegramBroadcast(found){
   found.map((cur, i) => {
@@ -81,5 +83,6 @@ function telegramBroadcast(found){
 scanner.on('foundPairs', (pairs) => {
   console.log(pairs)
   wss.broadcast(JSON.stringify(pairs))
-  //telegramBroadcast(pairs)
+  telegramBroadcast(pairs)
+  pairState = pairs
 })

@@ -104,7 +104,7 @@ class Scanner extends EventEmitter {
           if(macd[0].MACD < 0){
             return resolve()
           }
-          if(relVol[0] < 1){
+          if(relVol[0] < 2){
             return resolve()
           }
           if(roc[0] < 0){
