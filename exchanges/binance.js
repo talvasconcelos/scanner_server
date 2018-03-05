@@ -101,7 +101,7 @@ class Scanner extends EventEmitter {
           // if(Math.round(aiPrediction) !== 1){
           //   return resolve()
           // }
-          if(macd[0].MACD < 0){
+          if(macd[0].histogram < 0 && !Utils.fromBellow(macd[0].MACD, macd[1].MACD)){
             return resolve()
           }
           if(relVol[0] < 2){
@@ -110,7 +110,7 @@ class Scanner extends EventEmitter {
           if(roc[0] < 0){
             return resolve()
           }
-          if(rsi[0] < 45 && !Utils.fromBellow(res[0], res[1])){
+          if(rsi[0] < 45 && !Utils.fromBellow(rsi[0], rsi[1])){
             return resolve()
           }
           let output = {
