@@ -37,7 +37,7 @@ const interval = setInterval(function ping() {
   wss.clients.forEach((ws) => {
     if (ws.isAlive === false) return ws.terminate()
 
-    ws.isAlive = false
+    ws.isAlive = true
     ws.ping(noop)
   })
 }, 30000)
@@ -55,7 +55,7 @@ const slimbot = new Slimbot(process.env.TELEGRAM_TOKEN)
 slimbot.startPolling()
 
 const scanner = new Scanner()
-scanner.start_scanning({time: 900000})
+scanner.start_scanning({time: 120000})
 
 function telegramBroadcast(found){
   found.map((cur, i) => {
@@ -81,5 +81,5 @@ function telegramBroadcast(found){
 scanner.on('foundPairs', (pairs) => {
   console.log(pairs)
   wss.broadcast(JSON.stringify(pairs))
-  telegramBroadcast(pairs)
+  //telegramBroadcast(pairs)
 })
