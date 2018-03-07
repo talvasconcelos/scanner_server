@@ -27,6 +27,7 @@ class Scanner extends EventEmitter {
     this._pairs = false
     this._timer = null
     this._is_scanning = false
+    this._time = false
     options = options || {}
     this.volume = options.volume
     this.log = options.log || console.log
@@ -74,7 +75,6 @@ class Scanner extends EventEmitter {
 
   rvol(ohlc){
     let volume = ohlc.map(cur => Number(cur.volume))
-    let last = ohlc.pop()
     let output = Utils.rVol(volume, 20).reverse()
     return output
   }
@@ -98,21 +98,21 @@ class Scanner extends EventEmitter {
           if(res.quoteAssetVolume < this.volume){
             return resolve()
           }
-          // if(Math.round(aiPrediction) !== 1){
+          if(Math.round(aiPrediction) !== 1){
+            return resolve()
+          }
+          // if(macd[0].histogram < 0 && !Utils.fromBellow(macd[0].MACD, macd[1].MACD)){
           //   return resolve()
           // }
-          if(macd[0].histogram < 0 && !Utils.fromBellow(macd[0].MACD, macd[1].MACD)){
-            return resolve()
-          }
-          if(relVol[0] < 2){
-            return resolve()
-          }
-          if(roc[0] < 0){
-            return resolve()
-          }
-          if(rsi[0] < 45 && !Utils.fromBellow(rsi[0], rsi[1])){
-            return resolve()
-          }
+          // if(relVol[0] < 2){
+          //   return resolve()
+          // }
+          // if(roc[0] < 0){
+          //   return resolve()
+          // }
+          // if(rsi[0] < 50 && !Utils.fromBellow(rsi[0], rsi[1])){
+          //   return resolve()
+          // }
           let output = {
             pair,
             close: res[0].close,
@@ -120,7 +120,8 @@ class Scanner extends EventEmitter {
             vol: relVol[0],
             roc: roc[0],
             rsi: Math.round(rsi[0]),
-            ai: aiPrediction
+            ai: aiPrediction,
+            timestamp: this._time
           }
           output.gap = Math.round((output.close - output.ema) * 1000000) /1000000
           resolve(output)
@@ -161,6 +162,7 @@ class Scanner extends EventEmitter {
 
   _scan(){
     this.client.time().then(res => console.log('New scan:', new Date(res.serverTime)))
+    this._time = Date.now()
     let out = []
     this.client.exchangeInfo()
     .then(res => {
