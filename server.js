@@ -19,7 +19,7 @@ slimbot.startPolling()
 
 //Scanner
 const scanner = new Scanner()
-scanner.start_scanning({time: 120000})
+scanner.start_scanning({time: 900000})
 
 function telegramBroadcast(found){
   found.map((cur, i) => {
