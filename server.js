@@ -1,5 +1,6 @@
 'use strict'
 process.env.NODE_ENV !== 'production' ? require('dotenv').config() : null
+require('heroku-self-ping')(process.env.APP_URL)
 
 const polka = require('polka')
 const path = require('path')
@@ -7,9 +8,9 @@ const app = polka()
 const WS = require('./lib/websocket')({server: app.server})
 
 const { PORT=3000 } = process.env
-//const INDEX = path.join(__dirname, 'index.html')
+const INDEX = path.join(__dirname, 'index.html')
 
-//app.use((req, res) => res.end(new Date().toTimeString()))
+app.use((req, res) => res.end(new Date().toTimeString()))
 app.listen(PORT).then( _ => console.log(`Listening on ${ PORT }`))
 
 const Scanner = require('./exchanges/binance')
@@ -35,7 +36,6 @@ function telegramBroadcast(found){
     *Volume:* ${cur.vol || 1}
     *Rank:* #${i + 1}
     *AI Prediction:* ${aiScore}% (prob. to move up)
-    Time: ${cur.timestamp}
     [See it on Binance](https://www.binance.com/tradeDetail.html?symbol=${urlPair})`
 
     slimbot.sendMessage('@trexMarketScan', msg, {parse_mode: 'Markdown'})

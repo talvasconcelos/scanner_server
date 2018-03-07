@@ -12,6 +12,7 @@
   "dependencies": {
     "binance": "^1.3.3",
     "continuous": "^0.1.2",
+    "heroku-self-ping": "^1.1.4",
     "polka": "^0.3.4",
     "slimbot": "^0.7.11",
     "technicalindicators": "^1.1.4",
