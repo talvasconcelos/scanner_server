@@ -6,6 +6,7 @@ const polka = require('polka')
 const path = require('path')
 const app = polka()
 const WS = require('./lib/websocket')({server: app.server})
+const Utils = require('./lib/utils')
 
 const { PORT=3000 } = process.env
 const INDEX = path.join(__dirname, 'index.html')

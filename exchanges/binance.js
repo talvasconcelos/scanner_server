@@ -94,9 +94,6 @@ class Scanner extends EventEmitter {
 
           //LSTM
           res.reverse()
-          lstm(Utils.prepAiData(res[3], rsi[3], relVol[3], roc[3]))
-          lstm(Utils.prepAiData(res[2], rsi[2], relVol[2], roc[2]))
-          lstm(Utils.prepAiData(res[1], rsi[1], relVol[1], roc[1]))
           let aiPrediction = Number(lstm(Utils.prepAiData(res[0], rsi[0], relVol[0], roc[0])))
           if(res.quoteAssetVolume < this.volume){
             return resolve()
@@ -144,16 +141,22 @@ class Scanner extends EventEmitter {
       }
       let timer = new continuous(options)
       timer.on('stopped', () => {
-          this._is_scanning = false
+        this._is_scanning = false
       })
       this._timer = timer
       timer.on('started', () => {
         this._is_scanning = true
-        this.client.time().then(res => console.log('Scanner started!', new Date(res.serverTime)))
+        console.log('Scanner started!', new Date(serverTime))
         self.emit('scanStart')
         return resolve(true)
       })
-      resolve(timer.start())
+      this.client.time().then(res => {
+        let milli = Utils.delayedStart(15, res.serverTime)
+        console.log('Scanner will start in', Utils.milliToMin(milli))
+        setTimeout(() => {
+          resolve(timer.start())
+        }, milli)
+      })
     })
   }
 
