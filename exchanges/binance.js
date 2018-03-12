@@ -142,14 +142,15 @@ class Scanner extends EventEmitter {
       this._timer = timer
       timer.on('started', () => {
         this._is_scanning = true
-        console.log('Scanner started!', new Date(serverTime))
         self.emit('scanStart')
         return resolve(true)
       })
       self.client.time().then(res => {
-        let milli = Utils.delayedStart(15, res.serverTime)
+        let serverTime = res.serverTime
+        let milli = Utils.delayedStart(15, serverTime)
         console.log('Scanner will start in', Utils.milliToMin(milli))
         setTimeout(() => {
+          console.log('Scanner started!', new Date(serverTime))
           resolve(timer.start())
         }, milli)
       })
