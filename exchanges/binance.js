@@ -3,10 +3,6 @@ const fs = require('fs')
 const EventEmitter = require('events')
 const continuous = require('continuous')
 const Utils = require('../lib/utils')
-const update = require('./update_products')
-// const products = fs.existsSync( './products.json') ?
-//   require('./products.json') :
-//   update.products()
 const tech = require('technicalindicators')
 const api = require('binance')
 const lstm = require('../lib/lstm')
@@ -150,7 +146,7 @@ class Scanner extends EventEmitter {
         self.emit('scanStart')
         return resolve(true)
       })
-      this.client.time().then(res => {
+      self.client.time().then(res => {
         let milli = Utils.delayedStart(15, res.serverTime)
         console.log('Scanner will start in', Utils.milliToMin(milli))
         setTimeout(() => {
