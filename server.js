@@ -22,6 +22,7 @@ slimbot.startPolling()
 //Scanner
 const scanner = new Scanner()
 scanner.start_scanning({time: 900000})
+let PAIR_CACHE
 
 function telegramBroadcast(found){
   found.map((cur, i) => {
@@ -47,4 +48,5 @@ scanner.on('foundPairs', (pairs) => {
   telegramBroadcast(pairs)
   console.log(pairs)
   WS.broadcastWS(pairs)
+  PAIR_CACHE = pairs
 })
