@@ -46,6 +46,14 @@ class Scanner extends EventEmitter {
     return tech.EMA.calculate({period, values: close}).reverse()
   }
 
+  mfi(ohlc, period){
+    let close = ohlc.map(cur => +cur.close)
+    let high = ohlc.map(cur => +cur.high)
+    let low = ohlc.map(cur => +cur.low)
+    let volume = ohlc.map(cur => +cur.volume)
+    return tech.MFI.calculate({high, low, close, volume, period: 14}).reverse()
+  }
+
   rsi(ohlc){
     let close = ohlc.map(cur => Number(cur.close))
     //console.log(tech.RSI.calculate({values: close, period: 14}).reverse())
@@ -84,7 +92,7 @@ class Scanner extends EventEmitter {
       }).then(res => {
           let ema_10 = this.ema(res, 10)
           let relVol = this.rvol(res)
-          let roc = this.roc(res)
+          let mfi = this.mfi(res)
           let rsi = this.rsi(res)
           let macd = this.macd(res)
 
@@ -103,9 +111,9 @@ class Scanner extends EventEmitter {
           if(relVol[0] < 2){
             return resolve()
           }
-          // if(roc[0] < 0){
-          //   return resolve()
-          // }
+          if(mfi[0] < 40){
+            return resolve()
+          }
           if(rsi[0] < 40 && !Utils.fromBellow(rsi[0], rsi[1])){
             return resolve()
           }
