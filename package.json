@@ -14,9 +14,9 @@
     "continuous": "^0.1.2",
     "heroku-self-ping": "^1.1.4",
     "polka": "^0.3.4",
-    "slimbot": "^0.7.11",
-    "technicalindicators": "^1.1.4",
-    "ws": "^4.1.0"
+    "slimbot": "^0.7.13",
+    "technicalindicators": "^1.1.10",
+    "ws": "^5.1.1"
   },
   "devDependencies": {
     "dotenv": "^5.0.1"

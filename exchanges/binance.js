@@ -80,9 +80,9 @@ class Scanner extends EventEmitter {
       this.client.klines({
         symbol: pair,
         interval: '15m',
-        limit: 30
+        limit: 50
       }).then(res => {
-          let ema_7 = this.ema(res, 7)
+          let ema_10 = this.ema(res, 10)
           let relVol = this.rvol(res)
           let roc = this.roc(res)
           let rsi = this.rsi(res)
@@ -94,27 +94,26 @@ class Scanner extends EventEmitter {
           if(res.quoteAssetVolume < this.volume){
             return resolve()
           }
-          if(Math.round(aiPrediction) !== 1){
+          // if(Math.round(aiPrediction) !== 1){
+          //   return resolve()
+          // }
+          if(macd[0].histogram < 0 && !Utils.fromBellow(macd[0].MACD, macd[1].MACD)){
             return resolve()
           }
-          // if(macd[0].histogram < 0 && !Utils.fromBellow(macd[0].MACD, macd[1].MACD)){
-          //   return resolve()
-          // }
-          // if(relVol[0] < 2){
-          //   return resolve()
-          // }
+          if(relVol[0] < 2){
+            return resolve()
+          }
           // if(roc[0] < 0){
           //   return resolve()
           // }
-          // if(rsi[0] < 50 && !Utils.fromBellow(rsi[0], rsi[1])){
-          //   return resolve()
-          // }
+          if(rsi[0] < 40 && !Utils.fromBellow(rsi[0], rsi[1])){
+            return resolve()
+          }
           let output = {
             pair,
             close: res[0].close,
-            ema: ema_7[0],
+            ema: ema_10[0],
             vol: relVol[0],
-            roc: roc[0],
             rsi: Math.round(rsi[0]),
             ai: aiPrediction,
             timestamp: this._time
