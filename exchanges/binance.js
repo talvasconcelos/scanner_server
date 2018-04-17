@@ -91,6 +91,7 @@ class Scanner extends EventEmitter {
         limit: 50
       }).then(res => {
           let ema_10 = this.ema(res, 10)
+          let ema_30 = this.ema(res, 30)
           let relVol = this.rvol(res)
           let mfi = this.mfi(res)
           let rsi = this.rsi(res)
@@ -105,7 +106,10 @@ class Scanner extends EventEmitter {
           // if(Math.round(aiPrediction) !== 1){
           //   return resolve()
           // }
-          if(macd[0].histogram < 0 && !Utils.fromBellow(macd[0].MACD, macd[1].MACD)){
+          if(macd[0].histogram < 0){
+            return resolve()
+          }
+          if(!Utils.fromBellow(ema_30[0], ema_30[1])){
             return resolve()
           }
           if(relVol[0] < 2){
@@ -114,7 +118,7 @@ class Scanner extends EventEmitter {
           if(mfi[0] < 40 || mfi[0] > 70){
             return resolve()
           }
-          if(rsi[0] < 40 || rsi[0] > 80 && !Utils.fromBellow(rsi[0], rsi[1])){
+          if((rsi[0] < 40 || rsi[0] > 80) && !Utils.fromBellow(rsi[0], rsi[1])){
             return resolve()
           }
           let output = {
@@ -198,7 +202,7 @@ class Scanner extends EventEmitter {
   }
 
   advise(){
-    let pair = this.pairs.sort((x, y) => (x.gap - y.gap || y.ai - x.ai))
+    let pair = this.pairs.sort((x, y) => (x.gap - y.gap /*|| y.ai - x.ai*/))
     //console.log(pair)
     this.emit('foundPairs', pair)
     return
