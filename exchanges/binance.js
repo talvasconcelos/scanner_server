@@ -111,10 +111,10 @@ class Scanner extends EventEmitter {
           if(relVol[0] < 2){
             return resolve()
           }
-          if(mfi[0] < 40){
+          if(mfi[0] < 40 || mfi[0] > 70){
             return resolve()
           }
-          if(rsi[0] < 40 && !Utils.fromBellow(rsi[0], rsi[1])){
+          if(rsi[0] < 40 || rsi[0] > 80 && !Utils.fromBellow(rsi[0], rsi[1])){
             return resolve()
           }
           let output = {
