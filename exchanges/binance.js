@@ -98,7 +98,7 @@ class Scanner extends EventEmitter {
 
           //LSTM
           res.reverse()
-          let aiPrediction = Number(lstm(Utils.prepAiData(res[0], rsi[0], relVol[0], roc[0])))
+          //let aiPrediction = Number(lstm(Utils.prepAiData(res[0], rsi[0], relVol[0], roc[0])))
           if(res.quoteAssetVolume < this.volume){
             return resolve()
           }
@@ -122,8 +122,9 @@ class Scanner extends EventEmitter {
             close: res[0].close,
             ema: ema_10[0],
             vol: relVol[0],
+            mfi: mfi[0],
             rsi: Math.round(rsi[0]),
-            ai: aiPrediction,
+            //ai: aiPrediction,
             timestamp: this._time
           }
           output.gap = Math.round((output.close - output.ema) * 1000000) /1000000
