@@ -94,6 +94,9 @@ class Scanner extends EventEmitter {
 
   getCandles(pair){
     return new Promise(resolve => {
+      if(pair === '123456'){
+        return resolve()
+      }
       this.client.klines({
         symbol: pair,
         interval: '15m',
@@ -106,12 +109,12 @@ class Scanner extends EventEmitter {
           let roc = this.roc(res)
           let rsi = this.rsi(res)
           let macd = this.macd(res)
-          let upTrend = Promise.resolve(tech.isTrendingUp({values: res.map(cur => +cur.close)}))
+          //let upTrend = Promise.resolve(tech.isTrendingUp({values: res.map(cur => +cur.close)}))
           let bullish = this.bullish(res, 3)
 
           //LSTM
           res.reverse()
-          let aiPrediction = Number(lstm(Utils.prepAiData(res[0], rsi[0], relVol[0], roc[0])))
+          //let aiPrediction = Number(lstm(Utils.prepAiData(res[0], rsi[0], relVol[0], roc[0])))
           if(res.quoteAssetVolume < this.volume){
             return resolve()
           }
@@ -146,7 +149,7 @@ class Scanner extends EventEmitter {
             mfi: mfi[0],
             rsi: Math.round(rsi[0]),
             ai: aiPrediction,
-            upTrend,
+            //upTrend,
             bullish,
             timestamp: this._time
           }

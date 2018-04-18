@@ -54,7 +54,7 @@ function telegramBroadcast(found){
     *RSI:* ${cur.rsi}
     *Relative Volume:* ${cur.vol || 1}
     *Rank:* #${i + 1}
-    *${_pair}* is trending *${cur.upTrend ? 'up' : 'down'}*, showing ${cur.bullish ? 'bullish' : 'bearish'} action.
+    *${_pair}* is showing *${cur.bullish ? 'bullish' : 'bearish'}* action.
     [See it on Binance](https://www.binance.com/tradeDetail.html?symbol=${urlPair})`
     //*AI Prediction:* ${aiScore}% (prob. to move up)
 
