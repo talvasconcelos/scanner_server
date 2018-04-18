@@ -41,6 +41,15 @@ class Scanner extends EventEmitter {
     return this._pairs
   }
 
+  bullish(ohlc, period) {
+    let open = ohlc.map(cur => +cur.open).slice(-period)
+    let high = ohlc.map(cur => +cur.high).slice(-period)
+    let close = ohlc.map(cur => +cur.close).slice(-period)
+    let low = ohlc.map(cur => +cur.low).slice(-period)
+
+    return tech.bullish({open, high, close, low}).reverse()
+  }
+
   ema(ohlc, period){
     let close = ohlc.map(cur => Number(cur.close))
     return tech.EMA.calculate({period, values: close}).reverse()
@@ -94,12 +103,15 @@ class Scanner extends EventEmitter {
           let ema_30 = this.ema(res, 30)
           let relVol = this.rvol(res)
           let mfi = this.mfi(res)
+          let roc = this.roc(res)
           let rsi = this.rsi(res)
           let macd = this.macd(res)
+          let upTrend = tech.isTrendingUp({values: res.map(cur => +cur.close)})
+          let bullish = this.bullish(res, 3)
 
           //LSTM
           res.reverse()
-          //let aiPrediction = Number(lstm(Utils.prepAiData(res[0], rsi[0], relVol[0], roc[0])))
+          let aiPrediction = Number(lstm(Utils.prepAiData(res[0], rsi[0], relVol[0], roc[0])))
           if(res.quoteAssetVolume < this.volume){
             return resolve()
           }
@@ -109,16 +121,21 @@ class Scanner extends EventEmitter {
           // if(macd[0].histogram < 0){
           //   return resolve()
           // }
-          if(!Utils.fromBellow(ema_30[0], ema_30[1])){
-            return resolve()
-          }
+          // if(!Utils.fromBellow(ema_30[0], ema_30[1])){
+          //   return resolve()
+          // }
           // if(relVol[0] < 2){
           //   return resolve()
           // }
+
           if(mfi[0] < 40 || mfi[0] > 70){
             return resolve()
           }
+
           if(res[0].close < ema_30[0]){
+            return resolve()
+          }
+          if(res[1].close > ema_30[1]){
             return resolve()
           }
           // if((rsi[0] < 40 || rsi[0] > 80) && !Utils.fromBellow(rsi[0], rsi[1])){
@@ -131,10 +148,12 @@ class Scanner extends EventEmitter {
             vol: relVol[0],
             mfi: mfi[0],
             rsi: Math.round(rsi[0]),
-            //ai: aiPrediction,
+            ai: aiPrediction,
+            upTrend,
+            bullish,
             timestamp: this._time
           }
-          output.gap = Math.round((output.close - output.ema) * 1000000) /1000000
+          output.gap = Math.round((output.close - ema_30[0]) * 1000000) /1000000
           resolve(output)
         })
         .catch(err => console.error(err))

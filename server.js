@@ -23,10 +23,27 @@ slimbot.startPolling()
 const scanner = new Scanner()
 scanner.start_scanning({time: 900000})
 let PAIR_CACHE
+let currencies = ['BTC', 'ETH', 'BNB', 'USDT']
 
 function telegramBroadcast(found){
   found.map((cur, i) => {
-    let currency = cur.pair.slice(-3)
+    let currency //= cur.pair.slice(-3)
+    switch (true) {
+      case (/(BTC)$/g).test(cur.pair):
+        currency = 'BTC'
+        break;
+      case (/(ETH)$/g).test(cur.pair):
+        currency = 'ETH'
+        break;
+      case (/(BNB)$/g).test(cur.pair):
+        currency = 'BNB'
+        break;
+      case (/(USDT)$/g).test(cur.pair):
+        currency = 'USDT'
+        break;
+      default:
+        break;
+    }
     let aiScore = Math.round((cur.ai * 100) * 10) / 10
     let _pair = cur.pair.split(currency)[0]
     let urlPair = _pair + '_' + currency
@@ -35,10 +52,11 @@ function telegramBroadcast(found){
     *Asset:* ${_pair}
     *Last Close @:* ${cur.close}
     *RSI:* ${cur.rsi}
-    *Volume:* ${cur.vol || 1}
+    *Relative Volume:* ${cur.vol || 1}
     *Rank:* #${i + 1}
-    *AI Prediction:* ${aiScore}% (prob. to move up)
+    *${_pair}* is trending *${cur.upTrend ? 'up' : 'down'}*, showing ${cur.bullish ? 'bullish' : 'bearish'} action.
     [See it on Binance](https://www.binance.com/tradeDetail.html?symbol=${urlPair})`
+    //*AI Prediction:* ${aiScore}% (prob. to move up)
 
     slimbot.sendMessage('@trexMarketScan', msg, {parse_mode: 'Markdown'})
   })
