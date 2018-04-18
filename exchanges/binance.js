@@ -47,7 +47,7 @@ class Scanner extends EventEmitter {
     let close = ohlc.map(cur => +cur.close).slice(-period)
     let low = ohlc.map(cur => +cur.low).slice(-period)
 
-    return tech.bullish({open, high, close, low}).reverse()
+    return tech.bullish({open, high, close, low})
   }
 
   ema(ohlc, period){
