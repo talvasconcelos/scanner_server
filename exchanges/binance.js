@@ -149,7 +149,7 @@ class Scanner extends EventEmitter {
             vol: relVol[0],
             mfi: mfi[0],
             rsi: Math.round(rsi[0]),
-            ai: aiPrediction,
+            //ai: aiPrediction,
             frontEnd,
             //upTrend,
             bullish,
