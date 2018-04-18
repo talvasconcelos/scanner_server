@@ -116,9 +116,9 @@ class Scanner extends EventEmitter {
           //LSTM
           res.reverse()
           //let aiPrediction = Number(lstm(Utils.prepAiData(res[0], rsi[0], relVol[0], roc[0])))
-          if(res.quoteAssetVolume < this.volume){
-            return resolve()
-          }
+          // if(res.quoteAssetVolume < this.volume){
+          //   return resolve()
+          // }
           // if(Math.round(aiPrediction) !== 1){
           //   return resolve()
           // }
