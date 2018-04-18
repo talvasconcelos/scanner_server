@@ -106,7 +106,7 @@ class Scanner extends EventEmitter {
           let roc = this.roc(res)
           let rsi = this.rsi(res)
           let macd = this.macd(res)
-          let upTrend = tech.isTrendingUp({values: res.map(cur => +cur.close)})
+          let upTrend = Promise.resolve(tech.isTrendingUp({values: res.map(cur => +cur.close)}))
           let bullish = this.bullish(res, 3)
 
           //LSTM
@@ -132,10 +132,7 @@ class Scanner extends EventEmitter {
             return resolve()
           }
 
-          if(res[0].close < ema_30[0]){
-            return resolve()
-          }
-          if(res[1].close > ema_30[1]){
+          if(res[0].close < ema_30[0] || res[1].close > ema_30[1]){
             return resolve()
           }
           // if((rsi[0] < 40 || rsi[0] > 80) && !Utils.fromBellow(rsi[0], rsi[1])){
