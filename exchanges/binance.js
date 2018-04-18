@@ -109,6 +109,7 @@ class Scanner extends EventEmitter {
           let roc = this.roc(res)
           let rsi = this.rsi(res)
           let macd = this.macd(res)
+          let frontEnd = res
           //let upTrend = Promise.resolve(tech.isTrendingUp({values: res.map(cur => +cur.close)}))
           let bullish = this.bullish(res, 3)
 
@@ -149,6 +150,7 @@ class Scanner extends EventEmitter {
             mfi: mfi[0],
             rsi: Math.round(rsi[0]),
             ai: aiPrediction,
+            frontEnd,
             //upTrend,
             bullish,
             timestamp: this._time
