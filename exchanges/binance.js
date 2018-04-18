@@ -106,21 +106,24 @@ class Scanner extends EventEmitter {
           // if(Math.round(aiPrediction) !== 1){
           //   return resolve()
           // }
-          if(macd[0].histogram < 0){
-            return resolve()
-          }
+          // if(macd[0].histogram < 0){
+          //   return resolve()
+          // }
           if(!Utils.fromBellow(ema_30[0], ema_30[1])){
             return resolve()
           }
-          if(relVol[0] < 2){
-            return resolve()
-          }
+          // if(relVol[0] < 2){
+          //   return resolve()
+          // }
           if(mfi[0] < 40 || mfi[0] > 70){
             return resolve()
           }
-          if((rsi[0] < 40 || rsi[0] > 80) && !Utils.fromBellow(rsi[0], rsi[1])){
+          if(res[0].close < ema_30[0]){
             return resolve()
           }
+          // if((rsi[0] < 40 || rsi[0] > 80) && !Utils.fromBellow(rsi[0], rsi[1])){
+          //   return resolve()
+          // }
           let output = {
             pair,
             close: res[0].close,
