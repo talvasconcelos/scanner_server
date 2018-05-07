@@ -25,6 +25,8 @@ scanner.start_scanning({time: 900000})
 let PAIR_CACHE
 let currencies = ['BTC', 'ETH', 'BNB', 'USDT']
 
+WS.wss.on('connection', (ws) => ws.send(JSON.stringify(PAIR_CACHE)))
+
 function telegramBroadcast(found){
   found.map((cur, i) => {
     let currency //= cur.pair.slice(-3)
@@ -61,6 +63,8 @@ function telegramBroadcast(found){
     slimbot.sendMessage('@trexMarketScan', msg, {parse_mode: 'Markdown'})
   })
 }
+
+
 
 scanner.on('foundPairs', (pairs) => {
   telegramBroadcast(pairs)
