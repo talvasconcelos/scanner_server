@@ -70,7 +70,7 @@ scanner.on('foundPairs', (pairs) => {
   telegramBroadcast(pairs)
   console.log(pairs)
   WS.broadcastWS(pairs)
-  if(array.isArray(pairs) && pairs.length !== 0){
+  if(Array.isArray(pairs) && pairs.length){
     PAIR_CACHE = pairs
   }
 })
