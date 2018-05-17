@@ -99,9 +99,10 @@ class Scanner extends EventEmitter {
       }
       this.client.klines({
         symbol: pair,
-        interval: '15m'
+        interval: '15m',
+        limit: 251
       }).then(res => {
-        
+
           let ema_10 = this.ema(res, 10)
           let ema_30 = this.ema(res, 30)
           let relVol = this.rvol(res)
@@ -111,7 +112,7 @@ class Scanner extends EventEmitter {
           let macd = this.macd(res)
           let frontEnd = res.slice(-20)
           let upTrend = Promise.resolve(tech.isTrendingUp({values: res.map(cur => +cur.close)}))
-          let bullish = this.bullish(res, 3)
+          let bullish = this.bullish(res, 2)
 
           //LSTM
           res.reverse()
@@ -132,11 +133,11 @@ class Scanner extends EventEmitter {
           //   return resolve()
           // }
 
-          if(!bullish || !upTrend){
+          if(!upTrend){
             return resolve()
           }
 
-          if(mfi[0] < 40 || mfi[0] > 70){
+          if((mfi[0] < 40 || mfi[0] > 70) && !Utils.fromBellow(mfi[0], mfi[1])){
             return resolve()
           }
 
@@ -230,7 +231,7 @@ class Scanner extends EventEmitter {
   }
 
   advise(){
-    let pair = this.pairs.sort((x, y) => (x.gap - y.gap /*|| y.ai - x.ai*/))
+    let pair = this.pairs.sort((x, y) => (y.vol - x.vol || x.gap - y.gap))
     //console.log(pair)
     this.emit('foundPairs', pair)
     return
