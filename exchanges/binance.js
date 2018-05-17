@@ -99,8 +99,7 @@ class Scanner extends EventEmitter {
       }
       this.client.klines({
         symbol: pair,
-        interval: '15m',
-        limit: 251
+        interval: '15m'
       }).then(res => {
 
           let ema_10 = this.ema(res, 10)
@@ -113,7 +112,7 @@ class Scanner extends EventEmitter {
           let macdH = macd.map(v => v.histogram)
           let frontEnd = res.slice(-20)
           let upTrend = Promise.resolve(tech.isTrendingUp({values: res.map(cur => +cur.close)}))
-          let bullish = this.bullish(res, 2)
+          let bullish = this.bullish(res, 3)
 
           //LSTM
           res.reverse()
@@ -146,9 +145,9 @@ class Scanner extends EventEmitter {
             return resolve()
           }
 
-          if(res[0].close < ema_30[0] || res[1].close > ema_30[1]){
-            return resolve()
-          }
+          // if(res[0].close < ema_30[0] || res[1].close > ema_30[1]){
+          //   return resolve()
+          // }
 
           if(/*(rsi[0] < 40 || rsi[0] > 80) && */!Utils.fromBellow(rsi[0], rsi[1])){
             return resolve()
