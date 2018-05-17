@@ -134,7 +134,7 @@ class Scanner extends EventEmitter {
           //   return resolve()
           // }
 
-          if(!upTrend){
+          if(!upTrend || !bullish){
             return resolve()
           }
 
@@ -146,9 +146,9 @@ class Scanner extends EventEmitter {
             return resolve()
           }
 
-          // if(res[0].close < ema_30[0] || res[1].close > ema_30[1]){
-          //   return resolve()
-          // }
+          if(res[0].close < ema_30[0] || res[1].close > ema_30[1]){
+            return resolve()
+          }
 
           if(/*(rsi[0] < 40 || rsi[0] > 80) && */!Utils.fromBellow(rsi[0], rsi[1])){
             return resolve()
