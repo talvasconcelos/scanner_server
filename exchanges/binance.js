@@ -110,6 +110,7 @@ class Scanner extends EventEmitter {
           let roc = this.roc(res)
           let rsi = this.rsi(res)
           let macd = this.macd(res)
+          let macdH = macd.map(v => v.histogram)
           let frontEnd = res.slice(-20)
           let upTrend = Promise.resolve(tech.isTrendingUp({values: res.map(cur => +cur.close)}))
           let bullish = this.bullish(res, 2)
@@ -141,12 +142,17 @@ class Scanner extends EventEmitter {
             return resolve()
           }
 
-          if(res[0].close < ema_30[0] || res[1].close > ema_30[1]){
+          if(!Utils.fromBellow(macdH[0], macdH[1])){
             return resolve()
           }
-          // if((rsi[0] < 40 || rsi[0] > 80) && !Utils.fromBellow(rsi[0], rsi[1])){
+
+          // if(res[0].close < ema_30[0] || res[1].close > ema_30[1]){
           //   return resolve()
           // }
+
+          if(/*(rsi[0] < 40 || rsi[0] > 80) && */!Utils.fromBellow(rsi[0], rsi[1])){
+            return resolve()
+          }
           let output = {
             pair,
             close: res[0].close,
