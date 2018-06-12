@@ -86,6 +86,19 @@ class Scanner extends EventEmitter {
     }).reverse()
   }
 
+  bb(ohlc, period, stdDev){
+    let close = ohlc.map(cur => +cur.close)
+    return tech.BollingerBands.calculate({values: close, period, stdDev}).reverse()
+  }
+
+  cci(ohlc, period){
+    let open = ohlc.map(cur => +cur.open)
+    let high = ohlc.map(cur => +cur.high)
+    let low = ohlc.map(cur => +cur.low)
+    let close = ohlc.map(cur => +cur.close)
+    return tech.CCI.calculate(open, high, low, close, period).reverse()
+  }
+
   rvol(ohlc){
     let volume = ohlc.map(cur => Number(cur.volume))
     let output = Utils.rVol(volume, 20).reverse()
@@ -99,9 +112,8 @@ class Scanner extends EventEmitter {
       }
       this.client.klines({
         symbol: pair,
-        interval: '15m'
+        interval: '1h'
       }).then(res => {
-
           let ema_10 = this.ema(res, 10)
           let ema_30 = this.ema(res, 30)
           let relVol = this.rvol(res)
@@ -113,6 +125,8 @@ class Scanner extends EventEmitter {
           let frontEnd = res.slice(-20)
           let upTrend = Promise.resolve(tech.isTrendingUp({values: res.map(cur => +cur.close)}))
           let bullish = this.bullish(res, 3)
+          let bbUp = this.bb(res).map(v => v.upper)
+          let cci = this.cci(res, 9)
 
           //LSTM
           res.reverse()
@@ -133,25 +147,28 @@ class Scanner extends EventEmitter {
           //   return resolve()
           // }
 
-          if(!upTrend || !bullish){
-            return resolve()
-          }
-
-          if((mfi[0] < 40 || mfi[0] > 70) && !Utils.fromBellow(mfi[0], mfi[1])){
-            return resolve()
-          }
-
-          if(!Utils.fromBellow(macdH[0], macdH[1])){
-            return resolve()
-          }
-
-          // if(res[0].close < ema_30[0] || res[1].close > ema_30[1]){
+          // if(!upTrend || !bullish){
           //   return resolve()
           // }
-
-          if(/*(rsi[0] < 40 || rsi[0] > 80) && */!Utils.fromBellow(rsi[0], rsi[1])){
-            return resolve()
-          }
+          //
+          // if((mfi[0] < 35 || mfi[0] > 70) && !Utils.fromBellow(mfi[0], mfi[1])){
+          //   return resolve()
+          // }
+          //
+          // if(!Utils.fromBellow(macdH[0], macdH[1])){
+          //   return resolve()
+          // }
+          //
+          // // if(res[0].close < ema_30[0] || res[1].close > ema_30[1]){
+          // //   return resolve()
+          // // }
+          //
+          // if(/*(rsi[0] < 40 || rsi[0] > 80) && */!Utils.fromBellow(rsi[0], rsi[1])){
+          //   return resolve()
+          // }
+          if(cci[0] < 90 && !Utils.fromBellow(cci[0], cci[1])) return resolve()
+          if(rsi[0] < 50 && !Utils.fromBellow(rsi[0], rsi[1])) return resolve()
+          if(res[0].close > bbUp) return resolve()
           let output = {
             pair,
             close: res[0].close,
@@ -170,6 +187,14 @@ class Scanner extends EventEmitter {
         })
         .catch(err => console.error(err))
       })
+  }
+
+  switch (expression) {
+    case expression:
+
+      break;
+    default:
+
   }
 
   start_scanning(options){
