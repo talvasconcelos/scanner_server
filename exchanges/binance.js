@@ -165,9 +165,15 @@ class Scanner extends EventEmitter {
           // if(/*(rsi[0] < 40 || rsi[0] > 80) && */!Utils.fromBellow(rsi[0], rsi[1])){
           //   return resolve()
           // }
-          if(cci[0] < 90 && !Utils.fromBellow(cci[0], cci[1])) return resolve()
-          if(rsi[0] < 50 && !Utils.fromBellow(rsi[0], rsi[1])) return resolve()
-          if(res[0].close > bbUp) return resolve()
+          if(cci[0] < 90 && !Utils.fromBellow(cci[0], cci[1])){
+            return resolve()
+          }
+          if(rsi[0] < 50 && !Utils.fromBellow(rsi[0], rsi[1])){
+            return resolve()
+          }
+          if(res[0].close > bbUp){
+            return resolve()
+          }
           let output = {
             pair,
             close: res[0].close,
