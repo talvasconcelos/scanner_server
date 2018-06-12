@@ -189,14 +189,6 @@ class Scanner extends EventEmitter {
       })
   }
 
-  switch (expression) {
-    case expression:
-
-      break;
-    default:
-
-  }
-
   start_scanning(options){
     let self = this
     options = options || {}
