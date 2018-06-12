@@ -86,12 +86,12 @@ class Scanner extends EventEmitter {
     }).reverse()
   }
 
-  bb(ohlc, period, stdDev){
+  bb(ohlc, period = 14, stdDev = 2){
     let close = ohlc.map(cur => +cur.close)
     return tech.BollingerBands.calculate({values: close, period, stdDev}).reverse()
   }
 
-  cci(ohlc, period){
+  cci(ohlc, period = 20){
     let open = ohlc.map(cur => +cur.open)
     let high = ohlc.map(cur => +cur.high)
     let low = ohlc.map(cur => +cur.low)
