@@ -95,7 +95,7 @@ class Scanner extends EventEmitter {
     let high = ohlc.map(cur => +cur.high)
     let low = ohlc.map(cur => +cur.low)
     let close = ohlc.map(cur => +cur.close)
-    return tech.CCI.calculate(high, low, close, period).reverse()
+    return tech.CCI.calculate({high, low, close, period}).reverse()
   }
 
   rvol(ohlc){
