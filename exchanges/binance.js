@@ -174,7 +174,7 @@ class Scanner extends EventEmitter {
           if(rsi[0] < 50 || !Utils.fromBellow(rsi[0], rsi[1])){
             return resolve()
           }
-          if(res[0].close > bbUp){
+          if(res[0].high > bbUp){
             return resolve()
           }
           let output = {
