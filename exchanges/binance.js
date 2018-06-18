@@ -234,30 +234,43 @@ class Scanner extends EventEmitter {
     return
   }
 
-  _scan(){
-    this.client.time().then(res => console.log('New scan:', new Date(res.serverTime)))
+  async _scan(){
+    await this.client.time().then(res => console.log('New scan:', new Date(res.serverTime)))
     this._time = Date.now()
     let out = []
-    this.client.exchangeInfo()
-    .then(res => {
-      let a
-      let iterator = res.symbols.entries()
-      while (a = iterator.next().value) {
-        out.push(this.getCandles(a[1].symbol))
-      }
-    })
-    .then(() => Promise.all(out))
-    .then(res => {
-      this._pairs = res.filter(val => val)
-      if(this.pairs.length)
-        return this.advise()
-      console.log('No good trades at the moment!')
-      //this.emit('foundPairs', 'No good trades at the moment!')
-      return
-    })
-    .catch(err => {
-      console.error(err)
-    })
+    let pairs = await this.client.exchangeInfo()
+    pairs = pairs.symbols.map(e => e.symbol)
+    for (symbol of pairs) {
+      const candles = await getCandles(symbol)
+      out.push(candles)
+    }
+    this._pairs = out.filter(val => val)
+    if(this.pairs.length){
+      return this.advise()
+    }
+    console.log('No good trades at the moment!')
+    return
+
+    // this.client.exchangeInfo()
+    // .then(async res => {
+    //   let a
+    //   let iterator = res.symbols.entries()
+    //   while (a = iterator.next().value) {
+    //     out.push(this.getCandles(a[1].symbol))
+    //   }
+    // })
+    // .then(() => Promise.all(out))
+    // .then(res => {
+    //   this._pairs = res.filter(val => val)
+    //   if(this.pairs.length)
+    //     return this.advise()
+    //   console.log('No good trades at the moment!')
+    //   //this.emit('foundPairs', 'No good trades at the moment!')
+    //   return
+    // })
+    // .catch(err => {
+    //   console.error(err)
+    // })
   }
 
   advise(){
