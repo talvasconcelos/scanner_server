@@ -223,7 +223,9 @@ class Scanner extends EventEmitter {
         self.emit('scanStart')
         return resolve(true)
       })
-      setInterval(filterLowVolume, 3600000)
+      setInterval(() => {
+        this.filterLowVolume()
+      }, 3600000)
       self.client.time().then(res => {
         let serverTime = res.serverTime
         let milli = Utils.delayedStart(15, serverTime)
