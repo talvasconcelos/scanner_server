@@ -23,6 +23,7 @@ class Scanner extends EventEmitter {
     this._pairs = false
     this._timer = null
     this._is_scanning = false
+    this._allTickers = false
     this._time = false
     options = options || {}
     this.volume = options.volume
@@ -39,6 +40,10 @@ class Scanner extends EventEmitter {
 
   get pairs(){
     return this._pairs
+  }
+
+  get allTickers() {
+    return this._allTickers
   }
 
   bullish(ohlc, period) {
@@ -111,7 +116,8 @@ class Scanner extends EventEmitter {
       }
       this.client.klines({
         symbol: pair,
-        interval: '1h'
+        interval: '1h',
+        limit: 100
       }).then(res => {
           if(res.length < 250) {
             return resolve()
@@ -125,7 +131,7 @@ class Scanner extends EventEmitter {
           let macd = this.macd(res)
           let macdH = macd.map(v => v.histogram)
           let frontEnd = res.slice(-20)
-          let upTrend = Promise.resolve(tech.isTrendingUp({values: res.map(cur => +cur.close)}))
+          //let upTrend = Promise.resolve(tech.isTrendingUp({values: res.map(cur => +cur.close)}))
           let bullish = this.bullish(res, 3)
           let bbUp = this.bb(res).map(v => v.upper)
           let cci = this.cci(res, 9)
@@ -177,6 +183,7 @@ class Scanner extends EventEmitter {
           if(res[0].high > bbUp){
             return resolve()
           }
+          this._time = Date.now()
           let output = {
             pair,
             close: res[0].close,
@@ -186,7 +193,7 @@ class Scanner extends EventEmitter {
             rsi: Math.round(rsi[0]),
             //ai: aiPrediction,
             frontEnd,
-            upTrend,
+            //upTrend,
             bullish,
             timestamp: this._time
           }
@@ -217,6 +224,11 @@ class Scanner extends EventEmitter {
         return resolve(true)
       })
       self.client.time().then(res => {
+        // setInterval(() => {
+        //   this.client.ticker24hr().then(p => {
+        //     p.filter(pair => pair.)
+        //   })
+        // }, 3600000)
         let serverTime = res.serverTime
         let milli = Utils.delayedStart(15, serverTime)
         console.log('Scanner will start in', Utils.milliToMin(milli))
@@ -236,18 +248,15 @@ class Scanner extends EventEmitter {
 
   async _scan(){
     await this.client.time().then(res => console.log('New scan:', new Date(res.serverTime)))
-    this._time = Date.now()
     let out = []
     let pairs = await this.client.exchangeInfo()
     pairs = pairs.symbols.map(e => e.symbol)
     for(let symbol of pairs) {
       const candles = await this.getCandles(symbol)
-      setTimeout(() => {
-        out.push(candles)
-      }, 1000)
+      out.push(candles)
     }
     this._pairs = out.filter(val => val)
-    if(this.pairs.length){
+    if(this.pairs.length > 0){
       return this.advise()
     }
     console.log('No good trades at the moment!')
