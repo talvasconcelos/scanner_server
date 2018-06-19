@@ -242,7 +242,6 @@ class Scanner extends EventEmitter {
   async filterLowVolume(){
     let pairs = await this.client.ticker24hr()
     pairs = pairs
-      .map(e => e.symbol)
       .filter(v => {
         let vol = 0
         switch (true) {
@@ -264,6 +263,7 @@ class Scanner extends EventEmitter {
         }
         return v.quoteVolume >= vol
       })
+      .map(e => e.symbol)
     this._allTickers = pairs
     return pairs
   }
@@ -277,9 +277,10 @@ class Scanner extends EventEmitter {
   async _scan(){
     await this.client.time().then(res => console.log('New scan:', new Date(res.serverTime)))
     let out = []
-    let pairs = this.allTickers.map(e => e.symbol)//await this.client.exchangeInfo()
+    // console.log(this.allTickers)
+    // let pairs = this.allTickers.map(e => e.symbol)//await this.client.exchangeInfo()
     //pairs = pairs.map(e => e.symbol)
-    for(let symbol of pairs) {
+    for(let symbol of this.allTickers) {
       const candles = await this.getCandles(symbol)
       out.push(candles)
     }
