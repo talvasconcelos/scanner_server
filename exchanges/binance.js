@@ -223,12 +223,8 @@ class Scanner extends EventEmitter {
         self.emit('scanStart')
         return resolve(true)
       })
+      setInterval(filterLowVolume, 3600000)
       self.client.time().then(res => {
-        // setInterval(() => {
-        //   this.client.ticker24hr().then(p => {
-        //     p.filter(pair => pair.)
-        //   })
-        // }, 3600000)
         let serverTime = res.serverTime
         let milli = Utils.delayedStart(15, serverTime)
         console.log('Scanner will start in', Utils.milliToMin(milli))
@@ -240,6 +236,34 @@ class Scanner extends EventEmitter {
     })
   }
 
+  filterLowVolume(){
+    this.client.ticker24hr().then(p => {
+      let filtered = p.filter(v {
+        let vol
+        switch (true) {
+          case (/(BTC)$/g).test(v.symbol):
+          vol = 30
+          break;
+          case (/(ETH)$/g).test(v.symbol):
+          vol = 200
+          break;
+          case (/(BNB)$/g).test(v.symbol):
+          vol = 5000
+          break;
+          case (/(USDT)$/g).test(v.symbol):
+          vol = 500000
+          break;
+          default:
+          vol = 100
+          break;
+        }
+        return v.quoteVolume >= vol
+      })
+      return filtered
+    }).then(res => this._allTickers = res)
+    .catch(err => console.console.error(err))
+  }
+
   stop_scanning(){
     this._timer.stop()
     console.log('Scanner stoped!')
@@ -249,8 +273,8 @@ class Scanner extends EventEmitter {
   async _scan(){
     await this.client.time().then(res => console.log('New scan:', new Date(res.serverTime)))
     let out = []
-    let pairs = await this.client.exchangeInfo()
-    pairs = pairs.symbols.map(e => e.symbol)
+    let pairs = this._allTickers.map(e => e.symbol)//await this.client.exchangeInfo()
+    //pairs = pairs.map(e => e.symbol)
     for(let symbol of pairs) {
       const candles = await this.getCandles(symbol)
       out.push(candles)
