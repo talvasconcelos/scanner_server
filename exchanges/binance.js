@@ -240,7 +240,7 @@ class Scanner extends EventEmitter {
     let out = []
     let pairs = await this.client.exchangeInfo()
     pairs = pairs.symbols.map(e => e.symbol)
-    for (symbol of pairs) {
+    for(let symbol of pairs) {
       const candles = await getCandles(symbol)
       out.push(candles)
     }
