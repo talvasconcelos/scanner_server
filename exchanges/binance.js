@@ -238,7 +238,7 @@ class Scanner extends EventEmitter {
 
   filterLowVolume(){
     this.client.ticker24hr().then(p => {
-      let filtered = p.filter(v {
+      let filtered = p.filter(v => {
         let vol
         switch (true) {
           case (/(BTC)$/g).test(v.symbol):
