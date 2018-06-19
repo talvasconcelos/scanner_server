@@ -241,7 +241,7 @@ class Scanner extends EventEmitter {
     let pairs = await this.client.exchangeInfo()
     pairs = pairs.symbols.map(e => e.symbol)
     for(let symbol of pairs) {
-      const candles = await getCandles(symbol)
+      const candles = await this.getCandles(symbol)
       out.push(candles)
     }
     this._pairs = out.filter(val => val)
@@ -250,7 +250,6 @@ class Scanner extends EventEmitter {
     }
     console.log('No good trades at the moment!')
     return
-
     // this.client.exchangeInfo()
     // .then(async res => {
     //   let a
