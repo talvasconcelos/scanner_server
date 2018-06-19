@@ -119,9 +119,9 @@ class Scanner extends EventEmitter {
         interval: '1h',
         limit: 100
       }).then(res => {
-          if(res.length < 250) {
-            return resolve()
-          }
+          // if(res.length < 250) {
+          //   return resolve()
+          // }
           let ema_10 = this.ema(res, 10)
           let ema_30 = this.ema(res, 30)
           let relVol = this.rvol(res)
