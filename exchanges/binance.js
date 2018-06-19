@@ -275,7 +275,7 @@ class Scanner extends EventEmitter {
   async _scan(){
     await this.client.time().then(res => console.log('New scan:', new Date(res.serverTime)))
     let out = []
-    let pairs = this._allTickers.map(e => e.symbol)//await this.client.exchangeInfo()
+    let pairs = this.allTickers().map(e => e.symbol)//await this.client.exchangeInfo()
     //pairs = pairs.map(e => e.symbol)
     for(let symbol of pairs) {
       const candles = await this.getCandles(symbol)
