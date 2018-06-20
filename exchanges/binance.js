@@ -163,9 +163,9 @@ class Scanner extends EventEmitter {
           //   return resolve()
           // }
           //
-          // if(!Utils.fromBellow(macdH[0], macdH[1])){
-          //   return resolve()
-          // }
+          if(macdH[0] < 0 || !Utils.fromBellow(macdH[0], macdH[1])){
+            return resolve()
+          }
           //
           // // if(res[0].close < ema_30[0] || res[1].close > ema_30[1]){
           // //   return resolve()
@@ -174,10 +174,10 @@ class Scanner extends EventEmitter {
           // if(/*(rsi[0] < 40 || rsi[0] > 80) && */!Utils.fromBellow(rsi[0], rsi[1])){
           //   return resolve()
           // }
-          if(cci[0] < 90 || !Utils.fromBellow(cci[0], cci[1])){
+          if(cci[0] < 80 || !Utils.fromBellow(cci[0], cci[1])){
             return resolve()
           }
-          if(rsi[0] < 50 || !Utils.fromBellow(rsi[0], rsi[1])){
+          if(rsi[0] < 40 || !Utils.fromBellow(rsi[0], rsi[1])){
             return resolve()
           }
           if(res[0].high > bbUp){
@@ -246,13 +246,13 @@ class Scanner extends EventEmitter {
         let vol = 0
         switch (true) {
           case (/(BTC)$/g).test(v.symbol):
-          vol = 30
+          vol = 20
           break;
           case (/(ETH)$/g).test(v.symbol):
-          vol = 200
+          vol = 100
           break;
           case (/(BNB)$/g).test(v.symbol):
-          vol = 5000
+          vol = 2500
           break;
           case (/(USDT)$/g).test(v.symbol):
           vol = 500000
@@ -313,7 +313,7 @@ class Scanner extends EventEmitter {
   }
 
   advise(){
-    let pair = this.pairs.sort((x, y) => (y.vol - x.vol || x.gap - y.gap))
+    let pair = this.pairs.sort((x, y) => (y.vol - x.vol || x.mfi - y.mfi))
     //console.log(pair)
     this.emit('foundPairs', pair)
     return
