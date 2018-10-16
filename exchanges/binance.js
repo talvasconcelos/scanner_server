@@ -74,6 +74,14 @@ class Scanner extends EventEmitter {
     return tech.RSI.calculate({values: close, period: 14}).reverse()
   }
 
+  airsi(ohlc){
+    let close = ohlc.map(cur => +cur.close)
+    return [...Array(14).fill(0), ...tech.RSI.calculate({
+      values: close,
+      period: 14
+    })]
+  }
+
   roc(ohlc){
     let close = ohlc.map(cur => Number(cur.close))
     return tech.ROC.calculate({values: close, period: 10}).reverse()
