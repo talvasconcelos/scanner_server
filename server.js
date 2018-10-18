@@ -74,3 +74,9 @@ scanner.on('foundPairs', (pairs) => {
     PAIR_CACHE = pairs
   }
 })
+
+scanner.on('aiPairs', (aipairs) => {
+  telegramBroadcast(aipairs)
+  console.log(aipairs)
+  WS.broadcastWS(aipairs)
+})

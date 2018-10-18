@@ -21,6 +21,7 @@ class Scanner extends EventEmitter {
   constructor(options){
     super()
     this._pairs = false
+    this.AI = []
     this._timer = null
     this._is_scanning = false
     this._allTickers = false
@@ -130,58 +131,28 @@ class Scanner extends EventEmitter {
           // if(res.length < 250) {
           //   return resolve()
           // }
+          let aiCandles = {}
+          aiCandles.pair = pair
           let ema_10 = this.ema(res, 10)
           let ema_30 = this.ema(res, 30)
           let relVol = this.rvol(res)
           let mfi = this.mfi(res)
-          let ai = Utils.prepAiData(res, this.airsi(res))
+          aiCandles.candles = Utils.prepAiData(res, this.airsi(res))
           let rsi = this.rsi(res)
           let macd = this.macd(res)
           let macdH = macd.map(v => v.histogram)
           let frontEnd = res.slice(-20)
-          //let upTrend = Promise.resolve(tech.isTrendingUp({values: res.map(cur => +cur.close)}))
-          let bullish = this.bullish(res, 3)
           let bbUp = this.bb(res).map(v => v.upper)
           let cci = this.cci(res, 9)
-
-          //LSTM
+          
+          this.AI.push(aiCandles)
+          
           res.reverse()
-          //let aiPrediction = Number(lstm(Utils.prepAiData(res[0], rsi[0], relVol[0], roc[0])))
-          // if(res.quoteAssetVolume < this.volume){
-          //   return resolve()
-          // }
-          // if(Math.round(aiPrediction) !== 1){
-          //   return resolve()
-          // }
-          // if(macd[0].histogram < 0){
-          //   return resolve()
-          // }
-          // if(!Utils.fromBellow(ema_30[0], ema_30[1])){
-          //   return resolve()
-          // }
-          // if(relVol[0] < 2){
-          //   return resolve()
-          // }
-
-          // if(!upTrend || !bullish){
-          //   return resolve()
-          // }
-          //
-          // if((mfi[0] < 35 || mfi[0] > 70) && !Utils.fromBellow(mfi[0], mfi[1])){
-          //   return resolve()
-          // }
-          //
+          
           if(macdH[0] < 0 || !Utils.fromBellow(macdH[0], macdH[1])){
             return resolve()
           }
-          //
-          // // if(res[0].close < ema_30[0] || res[1].close > ema_30[1]){
-          // //   return resolve()
-          // // }
-          //
-          // if(/*(rsi[0] < 40 || rsi[0] > 80) && */!Utils.fromBellow(rsi[0], rsi[1])){
-          //   return resolve()
-          // }
+          
           if(cci[0] < 80 || !Utils.fromBellow(cci[0], cci[1])){
             return resolve()
           }
@@ -199,10 +170,7 @@ class Scanner extends EventEmitter {
             vol: relVol[0],
             mfi: mfi[0],
             rsi: Math.round(rsi[0]),
-            ai,
             frontEnd,
-            //upTrend,
-            bullish,
             timestamp: this._time
           }
           output.gap = Math.round((output.close - ema_30[0]) * 1000000) /1000000
@@ -285,6 +253,7 @@ class Scanner extends EventEmitter {
   async _scan(){
     await this.client.time().then(res => console.log('New scan:', new Date(res.serverTime)))
     let out = []
+    this.AI = []
     // console.log(this.allTickers)
     // let pairs = this.allTickers.map(e => e.symbol)//await this.client.exchangeInfo()
     //pairs = pairs.map(e => e.symbol)
@@ -292,6 +261,7 @@ class Scanner extends EventEmitter {
       const candles = await this.getCandles(symbol)
       out.push(candles)
     }
+    this.emit('aiPairs', this.AI)
     this._pairs = out.filter(val => val)
     if(this.pairs.length > 0){
       return this.advise()
