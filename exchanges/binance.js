@@ -134,7 +134,7 @@ class Scanner extends EventEmitter {
           let ema_30 = this.ema(res, 30)
           let relVol = this.rvol(res)
           let mfi = this.mfi(res)
-          let roc = this.roc(res)
+          let ai = Utils.prepAiData(res, this.airsi)
           let rsi = this.rsi(res)
           let macd = this.macd(res)
           let macdH = macd.map(v => v.histogram)
