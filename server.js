@@ -22,10 +22,13 @@ slimbot.startPolling()
 //Scanner
 const scanner = new Scanner()
 scanner.start_scanning({time: 900000})
-let PAIR_CACHE
+let PAIR_CACHE, AI_PAIR_CACHE
 let currencies = ['BTC', 'ETH', 'BNB', 'USDT']
 
-WS.wss.on('connection', (ws) => ws.send(JSON.stringify(PAIR_CACHE)))
+WS.wss.on('connection', (ws) => {
+	ws.send(JSON.stringify(AI_PAIR_CACHE))
+	ws.send(JSON.stringify(PAIR_CACHE))
+})
 
 function telegramBroadcast(found){
   found.map((cur, i) => {
@@ -79,4 +82,7 @@ scanner.on('aiPairs', (aipairs) => {
   telegramBroadcast(aipairs)
   console.log(aipairs)
   WS.broadcastWS(aipairs)
+  if(Array.isArray(aipairs) && aipairs.length){
+    AI_PAIR_CACHE = aipairs
+  }
 })
