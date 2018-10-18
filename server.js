@@ -79,7 +79,6 @@ scanner.on('foundPairs', (pairs) => {
 })
 
 scanner.on('aiPairs', (aipairs) => {
-  telegramBroadcast(aipairs)
   console.log(aipairs)
   WS.broadcastWS(aipairs)
   if(Array.isArray(aipairs) && aipairs.length){
