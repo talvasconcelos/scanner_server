@@ -132,12 +132,11 @@ class Scanner extends EventEmitter {
           //   return resolve()
           // }
           let aiCandles = {}
-          aiCandles.pair = pair
           let ema_10 = this.ema(res, 10)
           let ema_30 = this.ema(res, 30)
           let relVol = this.rvol(res)
           let mfi = this.mfi(res)
-          aiCandles.candles = Utils.prepAiData(res, this.airsi(res))
+          let aiRes = res.slice(-20)
           let rsi = this.rsi(res)
           let macd = this.macd(res)
           let macdH = macd.map(v => v.histogram)
@@ -145,6 +144,11 @@ class Scanner extends EventEmitter {
           let bbUp = this.bb(res).map(v => v.upper)
           let cci = this.cci(res, 9)
           
+          aiCandles.candles = Utils.prepAiData(aiRes, this.airsi(aiRes))
+          aiCandles.pair = pair
+          aiCandles.frontEnd = frontEnd
+          aiCandles.timestamp = Date.now()
+
           this.AI.push(aiCandles)
           
           res.reverse()
