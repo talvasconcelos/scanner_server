@@ -226,16 +226,16 @@ class Scanner extends EventEmitter {
         let vol = 0
         switch (true) {
           case (/(BTC)$/g).test(v.symbol):
-          vol = 20
+          vol = 50
           break;
           case (/(ETH)$/g).test(v.symbol):
-          vol = 100
+          vol = 200
           break;
           case (/(BNB)$/g).test(v.symbol):
-          vol = 2500
+          vol = 500
           break;
           case (/(USDT)$/g).test(v.symbol):
-          vol = 500000
+          vol = 1000000
           break;
           default:
           vol = 100
