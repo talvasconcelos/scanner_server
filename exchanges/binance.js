@@ -251,7 +251,11 @@ class Scanner extends EventEmitter {
   }
 
   async _scan(){
-    await this.client.time().then(res => console.log('New scan:', new Date(res.serverTime)))
+  	let hour
+    await this.client.time().then(res => {
+    	hour = new Date(res.serverTime)
+    	console.log('New scan:', hour)
+    })
     let out = []
     this.AI = []
     // console.log(this.allTickers)
@@ -261,7 +265,9 @@ class Scanner extends EventEmitter {
       const candles = await this.getCandles(symbol)
       out.push(candles)
     }
-    this.emit('aiPairs', this.AI)
+    if(hour.getMinutes() < 10) {
+    	this.emit('aiPairs', this.AI)
+    } 
     this._pairs = out.filter(val => val)
     if(this.pairs.length > 0){
       return this.advise()
