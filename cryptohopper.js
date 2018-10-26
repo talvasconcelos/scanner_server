@@ -7,7 +7,10 @@ const tf = require('@tensorflow/tfjs')
 
 // https://market-scanner.herokuapp.com/
 
-const model = tf.loadModel('https://market-scanner.herokuapp.com/lib/models/lstm-model.json')
+const json = tf.loadModel('https://market-scanner.herokuapp.com/lib/models/lstm-model.json')
+const bin = tf.loadModel('https://market-scanner.herokuapp.com/lib/models/lstm-model.weights.bin')
+
+const model = await tf.loadModel(tf.io.browserFiles([loadedModel, weights]))
 
 const API_KEY = 'yl4txD45m4VyYO8amLNwTVmuELcnSc3z'
 const API_SECRET = 'I1uxDkGstUTRExx1mbWg8FarStUJ8ASdwK8ZCt7q30QX4bCEHBkDZ1ijDwPeMBEw'
