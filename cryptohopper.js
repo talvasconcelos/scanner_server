@@ -3,7 +3,7 @@ const request = require('request')
 const tf = require('@tensorflow/tfjs')
 require('@tensorflow/tfjs-node')
 
-tf.setBackend('cpu')
+//tf.setBackend('cpu')
 
 // https://market-scanner.herokuapp.com/
 
@@ -22,7 +22,8 @@ class Hopper {
         this.exchange = 'binance'
     }
 
-    getPrediction(opts) {
+    async getPrediction(opts) {
+        await model
         return tf.tidy(() => {
             const X = tf.tensor3d([opts.candles])
             const P = model.predict(X).dataSync()
