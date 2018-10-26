@@ -29,6 +29,7 @@ class Scanner extends EventEmitter {
     this._is_scanning = false
     this._allTickers = false
     this._time = false
+    this.hour = false
     options = options || {}
     this.volume = options.volume
     this.log = options.log || console.log
@@ -146,14 +147,16 @@ class Scanner extends EventEmitter {
           let frontEnd = res.slice(-20)
           let bbUp = this.bb(res).map(v => v.upper)
           let cci = this.cci(res, 9)
-          
-          aiCandles.candles = Utils.prepAiData(aiRes, this.airsi(aiRes))
-          aiCandles.pair = pair
-          aiCandles.frontEnd = frontEnd
-          aiCandles.timestamp = Date.now()
 
-          hopper.getPrediction({pair: pair, candles: aiCandles.candles})
-          this.AI.push(aiCandles)
+          if(this.hour){
+            aiCandles.candles = Utils.prepAiData(aiRes, this.airsi(aiRes))
+            aiCandles.pair = pair
+            aiCandles.frontEnd = frontEnd
+            aiCandles.timestamp = Date.now()
+  
+            hopper.getPrediction({pair: pair, candles: aiCandles.candles})
+            this.AI.push(aiCandles)
+          }          
           
           res.reverse()
           
@@ -261,7 +264,8 @@ class Scanner extends EventEmitter {
   async _scan(){
   	let hour
     await this.client.time().then(res => {
-    	hour = new Date(res.serverTime)
+      hour = new Date(res.serverTime)
+      hour.getMinutes() < 10 ? this.hour = true : this.hour = false
     	console.log('New scan:', hour)
     })
     let out = []
@@ -270,12 +274,15 @@ class Scanner extends EventEmitter {
     // let pairs = this.allTickers.map(e => e.symbol)//await this.client.exchangeInfo()
     //pairs = pairs.map(e => e.symbol)
     for(let symbol of this.allTickers) {
+      if()
       const candles = await this.getCandles(symbol)
       out.push(candles)
     }
-    if(hour.getMinutes() < 10) {
-    	this.emit('aiPairs', this.AI)
-    } 
+    
+    if (this.hour) {
+      this.emit('aiPairs', this.AI)
+    }
+
     this._pairs = out.filter(val => val)
     if(this.pairs.length > 0){
       return this.advise()
