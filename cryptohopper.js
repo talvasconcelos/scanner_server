@@ -1,13 +1,13 @@
 const crypto = require('crypto')
 const request = require('request')
 const tf = require('@tensorflow/tfjs')
-require('@tensorflow/tfjs-node')
+//require('@tensorflow/tfjs-node')
 
 //tf.setBackend('cpu')
 
 // https://market-scanner.herokuapp.com/
 
-const model = Promise.resolve(tf.loadModel('file://lib/models/lstm-model.json'))
+const model = Promise.resolve(tf.loadModel('https://market-scanner.herokuapp.com/lib/models/lstm-model.json'))
 
 const API_KEY = 'yl4txD45m4VyYO8amLNwTVmuELcnSc3z'
 const API_SECRET = 'I1uxDkGstUTRExx1mbWg8FarStUJ8ASdwK8ZCt7q30QX4bCEHBkDZ1ijDwPeMBEw'
