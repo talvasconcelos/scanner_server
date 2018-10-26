@@ -17,7 +17,6 @@
     "node-fetch": "^2.2.0",
     "polka": "^0.5.1",
     "request": "^2.88.0",
-    "sirv": "^0.2.2",
     "slimbot": "^0.8.3",
     "technicalindicators": "^1.1.10",
     "ws": "^6.1.0"
