@@ -5,7 +5,7 @@ require('heroku-self-ping')(process.env.APP_URL)
 const polka = require('polka')
 const path = require('path')
 const app = polka()
-const serve = require('sirv')('lib/models')
+const serve = require('sirv')
 const Utils = require('./lib/utils')
 const { PORT=3000 } = process.env
 
