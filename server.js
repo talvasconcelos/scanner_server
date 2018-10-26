@@ -5,12 +5,14 @@ require('heroku-self-ping')(process.env.APP_URL)
 const polka = require('polka')
 const path = require('path')
 const app = polka()
+const serve = require('sirv')
 const Utils = require('./lib/utils')
 const { PORT=3000 } = process.env
 
 const INDEX = path.join(__dirname, 'index.html')
 
 app.use((req, res) => res.end(new Date().toTimeString()))
+app.use(serve)
 app.listen(PORT, err => {
   if(err) throw err
   console.log(`Listening on ${ PORT }`)

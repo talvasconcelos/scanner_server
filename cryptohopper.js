@@ -1,7 +1,8 @@
 const crypto = require('crypto')
 const request = require('request')
 const tf = require('@tensorflow/tfjs')
-//require('@tensorflow/tfjs-node')
+require('@tensorflow/tfjs-node')
+
 tf.setBackend('cpu')
 
 // https://market-scanner.herokuapp.com/
