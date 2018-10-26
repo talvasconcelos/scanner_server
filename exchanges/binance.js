@@ -274,7 +274,6 @@ class Scanner extends EventEmitter {
     // let pairs = this.allTickers.map(e => e.symbol)//await this.client.exchangeInfo()
     //pairs = pairs.map(e => e.symbol)
     for(let symbol of this.allTickers) {
-      if()
       const candles = await this.getCandles(symbol)
       out.push(candles)
     }
