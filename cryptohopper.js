@@ -21,6 +21,7 @@ class Hopper {
         this.api_secret = API_SECRET
         this.signal_id = SIGNALLER_ID
         this.exchange = 'binance'
+        this.model.summary()
     }
 
     async getPrediction(opts) {
