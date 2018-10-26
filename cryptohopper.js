@@ -7,7 +7,7 @@ require('@tensorflow/tfjs-node')
 
 // https://market-scanner.herokuapp.com/
 
-const model = tf.loadModel('file://lib/models/lstm-model.json')
+const model = Promise.resolve(tf.loadModel('file://lib/models/lstm-model.json'))
 
 const API_KEY = 'yl4txD45m4VyYO8amLNwTVmuELcnSc3z'
 const API_SECRET = 'I1uxDkGstUTRExx1mbWg8FarStUJ8ASdwK8ZCt7q30QX4bCEHBkDZ1ijDwPeMBEw'
@@ -15,6 +15,7 @@ const SIGNALLER_ID = 224
 
 class Hopper {
     constructor() {
+        this.model = model.catch(err => console.error(err))
         this.api_url = 'https://www.cryptohopper.com'
         this.api_key = API_KEY
         this.api_secret = API_SECRET
@@ -23,14 +24,14 @@ class Hopper {
     }
 
     async getPrediction(opts) {
-        await model
         return tf.tidy(() => {
             const X = tf.tensor3d([opts.candles])
-            const P = model.predict(X).dataSync()
+            const P = this.model.predict(X).dataSync()
             const action = tf.argMax(P).dataSync()[0]
             if (action === 2) {
                 return
             }
+            console.log(P)
             return this.processSignal({pair: opts.pair, side: action === 0 ? 'buy' : 'sell'})
         })
     }
