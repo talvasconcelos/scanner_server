@@ -7,7 +7,7 @@ const tf = require('@tensorflow/tfjs')
 
 // https://market-scanner.herokuapp.com/
 
-const model = Promise.resolve(tf.loadModel('https://market-scanner.herokuapp.com/lib/models/lstm-model.json'))
+const model = tf.loadModel('https://market-scanner.herokuapp.com/lib/models/lstm-model.json')
 
 const API_KEY = 'yl4txD45m4VyYO8amLNwTVmuELcnSc3z'
 const API_SECRET = 'I1uxDkGstUTRExx1mbWg8FarStUJ8ASdwK8ZCt7q30QX4bCEHBkDZ1ijDwPeMBEw'
@@ -15,16 +15,21 @@ const SIGNALLER_ID = 224
 
 class Hopper {
     constructor() {
-        this.model = model.catch(err => console.error(err))
+        this.model = null
         this.api_url = 'https://www.cryptohopper.com'
         this.api_key = API_KEY
         this.api_secret = API_SECRET
         this.signal_id = SIGNALLER_ID
         this.exchange = 'binance'
-        this.model.summary()
+        model
+            .then(m => this.model = m)
+            .then(() => this.model.summary())
+            .catch(err => console.error(err))
+        
     }
 
     async getPrediction(opts) {
+        if(!this.model) return false
         return tf.tidy(() => {
             const X = tf.tensor3d([opts.candles])
             const P = this.model.predict(X).dataSync()
