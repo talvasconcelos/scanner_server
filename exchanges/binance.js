@@ -293,6 +293,7 @@ class Scanner extends EventEmitter {
 
     this._pairs = out.filter(val => val)
     if(this.pairs.length > 0){
+      console.log('Scan ended!')
       return this.advise()
     }
     console.log('No good trades at the moment!')
