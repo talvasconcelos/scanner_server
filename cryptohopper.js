@@ -44,8 +44,10 @@ class Hopper {
             if (action === 2 || P[action] < 1) {
                 return
             }
-            console.log(`${opts.pair}: ${action === 0 ? 'Buy' : 'Sell'}`)
-            return this.processSignal({pair: opts.pair, side: action === 0 ? 'buy' : 'sell'})
+            const side = action === 0 ? 'buy' : 'sell'
+            console.log(`${opts.pair}: ${side}`)
+            console.log(P[0], action, X)
+            return this.processSignal({pair: opts.pair, side: side})
         })
     }
 
