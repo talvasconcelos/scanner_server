@@ -87,6 +87,15 @@ class Scanner extends EventEmitter {
     })]
   }
 
+  aiobv(ohlc){
+    let close = ohlc.map(cur => +cur.close)
+    let volume = ohlc.map(cur => +cur.volume)
+    return tech.OBV.calculate({
+      close,
+      volume
+    })
+  }
+
   roc(ohlc){
     let close = ohlc.map(cur => Number(cur.close))
     return tech.ROC.calculate({values: close, period: 10}).reverse()
@@ -149,12 +158,12 @@ class Scanner extends EventEmitter {
           let cci = this.cci(res, 9)
 
           if(this.hour){
-            aiCandles.candles = Utils.prepAiData(aiRes, this.airsi(aiRes))
+            aiCandles.candles = Utils.prepAiData(aiRes, this.airsi(aiRes), this.aiobv(aiRes))
             aiCandles.pair = pair
             aiCandles.frontEnd = frontEnd
             aiCandles.timestamp = Date.now()
   
-            hopper.getPrediction({pair: pair, candles: aiCandles.candles})
+            hopper.getPrediction({pair: pair, candles: aiCandles.candles}).catch(err => console.error(err))
             this.AI.push(aiCandles)
           }          
           
