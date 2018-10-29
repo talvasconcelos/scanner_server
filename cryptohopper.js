@@ -56,7 +56,7 @@ class Hopper {
         }
 
         const options = {
-            url: this.api_url + opt.path,
+            url: this.api_url + opts.path,
             method: 'GET',
             headers: headers
         }
