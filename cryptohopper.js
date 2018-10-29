@@ -78,7 +78,8 @@ class Hopper {
     processSignal(opts) {
         const market = opts.pair
         const type = opts.side
-        const path = '/testsignal.php?api_key=' + api_key + '&signal_id=' + signal_id + '&exchange=' + exchange + '&market=' + market + '&type=' + type
+        //const path = '/testsignal.php?api_key=' + this.api_key + '&signal_id=' + this.signal_id + '&exchange=' + this.exchange + '&market=' + market + '&type=' + type
+        const path = `/testsignal.php?api_key=${this.api_key}&signal_id=${this.signal_id}&exchange=${this.exchange}&market=${market}&type=${type}`
         const signature = this.hashSignature(path)
         return this.sendSignal({
             path,
