@@ -271,7 +271,7 @@ class Scanner extends EventEmitter {
   	let hour
     await this.client.time().then(res => {
       hour = new Date(res.serverTime)
-      hour.getMinutes() < 10 ? this.hour = true : this.hour = true
+      hour.getMinutes() < 10 ? this.hour = true : this.hour = false
     	console.log('New scan:', hour)
     })
     let out = []
@@ -321,6 +321,9 @@ class Scanner extends EventEmitter {
     let pair = this.pairs.sort((x, y) => (y.vol - x.vol || x.mfi - y.mfi))
     //console.log(pair)
     this.emit('foundPairs', pair)
+    if (this.hour) {
+      this.emit('hopper', pair)
+    }
     return
   }
 }
