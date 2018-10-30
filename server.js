@@ -73,11 +73,6 @@ function telegramBroadcast(found){
   })
 }
 
-hopper.getPrediction({
-  pair: pair,
-  candles: aiCandles.candles
-}).catch(err => console.error(err))
-
 
 scanner.on('foundPairs', (pairs) => {
   telegramBroadcast(pairs)
