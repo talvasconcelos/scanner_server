@@ -7,9 +7,6 @@ const tech = require('technicalindicators')
 const api = require('binance')
 const lstm = require('../lib/lstm')
 
-const Hopper = require('../cryptohopper')
-const hopper = new Hopper()
-
 tech.setConfig('precision', 8)
 
 class Scanner extends EventEmitter {
@@ -163,7 +160,6 @@ class Scanner extends EventEmitter {
             aiCandles.frontEnd = frontEnd
             aiCandles.timestamp = Date.now()
   
-            hopper.getPrediction({pair: pair, candles: aiCandles.candles}).catch(err => console.error(err))
             this.AI.push(aiCandles)
           }          
           
@@ -274,7 +270,7 @@ class Scanner extends EventEmitter {
   	let hour
     await this.client.time().then(res => {
       hour = new Date(res.serverTime)
-      hour.getMinutes() < 10 ? this.hour = true : this.hour = false
+      hour.getMinutes() < 10 ? this.hour = true : this.hour = true
     	console.log('New scan:', hour)
     })
     let out = []

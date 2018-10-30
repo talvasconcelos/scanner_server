@@ -35,6 +35,16 @@ class Hopper {
         
     }
 
+    async batchPredict(pairs){
+        pairs.reduce(async (prevPair, nextPair) => {
+            await prevPair
+            return this.getPrediction({
+                pair: nextPair.pair,
+                candles: nextPair.candles
+            })
+        }, Promise.resolve())
+    }
+
     async getPrediction(opts) {
         if(!this.model) return
         return tf.tidy(() => {
