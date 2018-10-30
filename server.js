@@ -84,10 +84,11 @@ scanner.on('foundPairs', (pairs) => {
 })
 
 scanner.on('aiPairs', (aipairs) => {
-  hopper.batchPredict(aipairs)
-  //console.log(aipairs)
   WS.broadcastWS(aipairs)
   if(Array.isArray(aipairs) && aipairs.length){
     AI_PAIR_CACHE = aipairs
   }
+    
+  hopper.batchPredict(aipairs)
+  //console.log(aipairs)
 })

@@ -141,6 +141,7 @@ class Scanner extends EventEmitter {
           // if(res.length < 250) {
           //   return resolve()
           // }
+          res.pop()
           let aiCandles = {}
           let ema_10 = this.ema(res, 10)
           let ema_30 = this.ema(res, 30)

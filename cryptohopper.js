@@ -7,7 +7,7 @@ const tf = require('@tensorflow/tfjs')
 
 //require('@tensorflow/tfjs-node')
 
-//tf.setBackend('cpu')
+tf.setBackend('cpu')
 
 // https://market-scanner.herokuapp.com/
 
@@ -46,19 +46,18 @@ class Hopper {
     }
 
     async getPrediction(opts) {
-        if(!this.model) return
-        return tf.tidy(() => {
-            const X = tf.tensor3d([opts.candles])
-            const P = this.model.predict(X).dataSync()
-            const action = tf.argMax(P).dataSync()[0]
-            if (action === 2 || P[action] < 1) {
-                return
-            }
-            const side = action === 0 ? 'buy' : 'sell'
-            console.log(`${opts.pair}: ${side}`)
-            console.log(P[0], action, X)
-            return this.processSignal({pair: opts.pair, side: side})
-        })
+        if(!this.model) return        
+        const X = tf.tensor3d([opts.candles])
+        const P = await this.model.predict(X).dataSync()
+        const action = tf.argMax(P).dataSync()[0]
+        if (action === 2 || P[action] < 1) {
+            return
+        }
+        const side = action === 0 ? 'buy' : 'sell'
+        console.log(`${opts.pair}: ${side}`)
+        console.log(P, action, X.dataSync())
+
+        return this.processSignal({pair: opts.pair, side: side})        
     }
 
     sendSignal(opts) {
