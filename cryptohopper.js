@@ -38,7 +38,7 @@ class Hopper {
     async batchSignal(pairs){
         return pairs.reduce(async (prevPair, nextPair) => {
             await prevPair
-            return this.sendSignal({
+            return this.processSignal({
                 pair: nextPair.pair,
                 side: 'buy'
             })
