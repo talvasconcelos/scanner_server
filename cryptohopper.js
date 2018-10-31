@@ -56,7 +56,8 @@ class Hopper {
     }
 
     async getPrediction(opts) {
-        if(!this.model) return        
+        await model
+        if(!this.model) return
         const X = tf.tensor3d([opts.candles])
         const P = await this.model.predict(X).dataSync()
         const action = tf.argMax(P).dataSync()[0]
@@ -65,9 +66,9 @@ class Hopper {
         }
         const side = action === 0 ? 'buy' : 'sell'
         console.log(`${opts.pair}: ${side}`)
-        console.log(P, action, X.dataSync())
+        //console.log(P, action, X.dataSync())
 
-        return //this.processSignal({pair: opts.pair, side: side})        
+        return this.processSignal({pair: opts.pair, side: side})        
     }
 
     sendSignal(opts) {
@@ -100,7 +101,7 @@ class Hopper {
         const market = opts.pair
         const type = opts.side
         //const path = '/testsignal.php?api_key=' + this.api_key + '&signal_id=' + this.signal_id + '&exchange=' + this.exchange + '&market=' + market + '&type=' + type
-        const path = `/signal.php?api_key=${this.api_key}&signal_id=${this.signal_id}&exchange=${this.exchange}&market=${market}&type=${type}`
+        const path = `/testsignal.php?api_key=${this.api_key}&signal_id=${this.signal_id}&exchange=${this.exchange}&market=${market}&type=${type}`
         const signature = this.hashSignature(path)
         return this.sendSignal({
             path,

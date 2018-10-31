@@ -78,7 +78,7 @@ class Scanner extends EventEmitter {
 
   airsi(ohlc){
     let close = ohlc.map(cur => +cur.close)
-    return [...Array(14).fill(0), ...tech.RSI.calculate({
+    return [...Array(13).fill(0), ...tech.RSI.calculate({
       values: close,
       period: 14
     })]
@@ -271,7 +271,7 @@ class Scanner extends EventEmitter {
   	let hour
     await this.client.time().then(res => {
       hour = new Date(res.serverTime)
-      hour.getMinutes() < 10 ? this.hour = true : this.hour = true
+      hour.getMinutes() < 10 ? this.hour = true : this.hour = false
     	console.log('New scan:', hour)
     })
     let out = []

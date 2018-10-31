@@ -84,7 +84,7 @@ scanner.on('foundPairs', (pairs) => {
 })
 
 scanner.on('hopper', (pairs) => {
-  hopper.batchSignal(pairs)
+  hopper.batchPredict(pairs)
 })
 
 scanner.on('aiPairs', (aipairs) => {
