@@ -92,6 +92,7 @@ scanner.on('aiPairs', (aipairs) => {
   if(Array.isArray(aipairs) && aipairs.length){
     AI_PAIR_CACHE = aipairs
   }
-  //hopper.batchPredict(aipairs)
+  
+  hopper.batchPredict(aipairs)
   //console.log(aipairs)
 })

@@ -239,10 +239,10 @@ class Scanner extends EventEmitter {
         let vol = 0
         switch (true) {
           case (/(BTC)$/g).test(v.symbol):
-          vol = 150
+          vol = 200
           break;
           case (/(ETH)$/g).test(v.symbol):
-          vol = 200
+          vol = 300
           break;
           case (/(BNB)$/g).test(v.symbol):
           vol = 500
@@ -271,7 +271,7 @@ class Scanner extends EventEmitter {
   	let hour
     await this.client.time().then(res => {
       hour = new Date(res.serverTime)
-      hour.getMinutes() < 10 ? this.hour = true : this.hour = false
+      hour.getMinutes() < 10 ? this.hour = true : this.hour = true
     	console.log('New scan:', hour)
     })
     let out = []

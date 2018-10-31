@@ -67,7 +67,7 @@ class Hopper {
         console.log(`${opts.pair}: ${side}`)
         console.log(P, action, X.dataSync())
 
-        return this.processSignal({pair: opts.pair, side: side})        
+        return //this.processSignal({pair: opts.pair, side: side})        
     }
 
     sendSignal(opts) {
