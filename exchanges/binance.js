@@ -295,26 +295,6 @@ class Scanner extends EventEmitter {
     }
     console.log('No good trades at the moment!')
     return
-    // this.client.exchangeInfo()
-    // .then(async res => {
-    //   let a
-    //   let iterator = res.symbols.entries()
-    //   while (a = iterator.next().value) {
-    //     out.push(this.getCandles(a[1].symbol))
-    //   }
-    // })
-    // .then(() => Promise.all(out))
-    // .then(res => {
-    //   this._pairs = res.filter(val => val)
-    //   if(this.pairs.length)
-    //     return this.advise()
-    //   console.log('No good trades at the moment!')
-    //   //this.emit('foundPairs', 'No good trades at the moment!')
-    //   return
-    // })
-    // .catch(err => {
-    //   console.error(err)
-    // })
   }
 
   advise(){
