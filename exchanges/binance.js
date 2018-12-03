@@ -128,6 +128,69 @@ class Scanner extends EventEmitter {
     return output
   }
 
+  processData(ohlc) {
+    const data = (ohlc) => {
+      const o = ohlc.map(v => +v.open)
+      const h = ohlc.map(v => +v.high)
+      const c = ohlc.map(v => +v.close)
+      const l = ohlc.map(v => +v.low)
+      const v = ohlc.map(v => +v.volume)
+      const t = ohlc.map(v => +v.trades)
+      
+      return {o, h, c, l, v, t}
+    }
+
+    const ret = (data, multiplier = 1) => {
+      return data.map((c, i) => Utils.sigmoid(((c - data[i - 1]) / data[i - 1]) * multiplier || 0))
+    }
+
+    const UO = (close, high, low, n = 7, m = 14, s = 28) => {
+
+      const getAvgs = (arr, period) => [...Array(period - 1).fill(0), ...tech.SMA.calculate({
+        values: arr,
+        period
+      })]
+      const divide = (arr1, arr2) => arr1.map((v, i) => v / arr2[i] || 0)
+
+      const BP = close.map((v, i) => v - Math.min(low[i], close[i - 1]) || 0)
+      const TR = close.map((v, i) => Math.max(high[i], close[i - 1]) - Math.min(low[i], close[i - 1]) || 0)
+
+      const [nAvg, mAvg, sAvg] = [n, m, s].map(v => divide(getAvgs(BP, v), getAvgs(TR, v)))
+
+      return BP.map((v, i) => {
+        return ((4 * nAvg[i]) + (2 * mAvg[i]) + sAvg[i]) / (4 + 2 + 1)
+      })
+    }
+
+    const MACD = tech.MACD.calculate({
+      values: data.c,
+      fastPeriod: 12,
+      slowPeriod: 26,
+      signalPeriod: 9,
+      SimpleMAOscillator: false,
+      SimpleMASignal: false
+    })
+
+    const HIST = [...Array(25).fill(0), ...normalizeMinMax(MACD.map(v => v.histogram || 0))]
+    const MFI = [...Array(15).fill(0), ...tech.MFI.calculate({
+      high: data.h,
+      low: data.l,
+      close: data.c,
+      volume: data.v,
+      period: 14
+    })]
+    const RET = ret(data.c, 100)
+    const ROT = data.h.map((h, i) => Utils.sigmoid(Utils.rotationalFactor(h, data.h[i - 1], data.l[i], data.l[i - 1])))
+    const RSI = [...Array(14).fill(0), ...tech.RSI.calculate({
+      values: data.c,
+      period: 14
+    })]
+    const ULTIMATE = UO(data.c, data.h, data.l)
+
+    const STATE = RET.map((v, i) => [RET[i], ROT[i], RSI[i] / 100, MFI[i] / 100, HIST[i], ULTIMATE[i]])
+    return STATE.slice(-6)
+  }
+
   getCandles(pair){
     return new Promise(resolve => {
       if(pair === '123456'){
@@ -157,6 +220,7 @@ class Scanner extends EventEmitter {
 
           if(this.hour){
             aiCandles.candles = Utils.prepAiData(aiRes, this.airsi(aiRes), this.aiobv(aiRes))
+            aiCandles.annState = this.processData(res)
             aiCandles.pair = pair
             aiCandles.frontEnd = frontEnd
             aiCandles.timestamp = Date.now()
