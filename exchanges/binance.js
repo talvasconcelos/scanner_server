@@ -129,16 +129,14 @@ class Scanner extends EventEmitter {
   }
 
   processData(ohlc) {
-    const data = (ohlc) => {
-      const o = ohlc.map(v => +v.open)
-      const h = ohlc.map(v => +v.high)
-      const c = ohlc.map(v => +v.close)
-      const l = ohlc.map(v => +v.low)
-      const v = ohlc.map(v => +v.volume)
-      const t = ohlc.map(v => +v.trades)
-      
-      return {o, h, c, l, v, t}
-    }
+    const data = {} 
+    data.o = ohlc.map(v => +v.open)
+    data.h = ohlc.map(v => +v.high)
+    data.c = ohlc.map(v => +v.close)
+    data.l = ohlc.map(v => +v.low)
+    data.v = ohlc.map(v => +v.volume)
+    data.t = ohlc.map(v => +v.trades)
+    
 
     const ret = (data, multiplier = 1) => {
       return data.map((c, i) => Utils.sigmoid(((c - data[i - 1]) / data[i - 1]) * multiplier || 0))
