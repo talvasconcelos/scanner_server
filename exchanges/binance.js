@@ -136,7 +136,12 @@ class Scanner extends EventEmitter {
     data.l = ohlc.map(v => +v.low)
     data.v = ohlc.map(v => +v.volume)
     data.t = ohlc.map(v => +v.trades)
-    
+
+    const normalizeMinMax = (arr) => {
+      const min = _.min(arr)
+      const max = _.max(arr)
+      return arr.map(v => (v - min) / (max - min))
+    }    
 
     const ret = (data, multiplier = 1) => {
       return data.map((c, i) => Utils.sigmoid(((c - data[i - 1]) / data[i - 1]) * multiplier || 0))
