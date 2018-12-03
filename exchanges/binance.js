@@ -138,8 +138,8 @@ class Scanner extends EventEmitter {
     data.t = ohlc.map(v => +v.trades)
 
     const normalizeMinMax = (arr) => {
-      const min = _.min(arr)
-      const max = _.max(arr)
+      const min = Math.min(...arr)
+      const max = Math.max(...arr)
       return arr.map(v => (v - min) / (max - min))
     }    
 
