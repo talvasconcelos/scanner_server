@@ -207,9 +207,6 @@ class Scanner extends EventEmitter {
           // if(res.length < 250) {
           //   return resolve()
           // }
-          if (res[res.length - 1].closeTime > Date.now()){
-            res.pop()
-          }
           let aiCandles = {}
           let ema_10 = this.ema(res, 10)
           let ema_30 = this.ema(res, 30)
@@ -223,7 +220,11 @@ class Scanner extends EventEmitter {
           let cci = this.cci(res, 9)
 
           if(this.hour){
+            if(res[res.length - 1].closeTime > Date.now()) {
+              res.pop()
+            }
             let aiData = Utils.prepAiData(res)
+            aiTest = res
             aiCandles.candles = aiData
             aiCandles.hopper = Utils.prepHopperData(res, this.airsi(res), this.aiobv(res))
             aiCandles.pair = pair
@@ -308,16 +309,16 @@ class Scanner extends EventEmitter {
         let vol = 0
         switch (true) {
           case (/(BTC)$/g).test(v.symbol):
-          vol = 200
+          vol = 75
           break;
           case (/(ETH)$/g).test(v.symbol):
-          vol = 300
+          vol = 1000
           break;
           case (/(BNB)$/g).test(v.symbol):
-          vol = 500
+          vol = 1500
           break;
           case (/(USDT)$/g).test(v.symbol):
-          vol = 1000000
+          vol = 500000
           break;
           default:
           vol = 100

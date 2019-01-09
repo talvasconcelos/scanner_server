@@ -21,9 +21,9 @@ const WS = require('./lib/websocket')({server: app.server})
 const Scanner = require('./exchanges/binance')
 const Hopper = require('./cryptohopper')
 const hopper = new Hopper()
-const Slimbot = require('slimbot');
-const slimbot = new Slimbot(process.env.TELEGRAM_TOKEN)
-slimbot.startPolling()
+// const Slimbot = require('slimbot');
+// const slimbot = new Slimbot(process.env.TELEGRAM_TOKEN)
+// slimbot.startPolling()
 
 //Scanner
 const scanner = new Scanner()
@@ -73,9 +73,8 @@ function telegramBroadcast(found){
   })
 }
 
-
 scanner.on('foundPairs', (pairs) => {
-  telegramBroadcast(pairs)
+  // telegramBroadcast(pairs.slice(10))
   //console.log(pairs)
   WS.broadcastWS(pairs)
   if(Array.isArray(pairs) && pairs.length){
@@ -96,3 +95,4 @@ scanner.on('aiPairs', (aipairs) => {
   hopper.batchPredict(aipairs)
   //console.log(aipairs)
 })
+
