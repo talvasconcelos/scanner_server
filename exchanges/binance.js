@@ -202,18 +202,19 @@ class Scanner extends EventEmitter {
       this.client.klines({
         symbol: pair,
         interval: '1h',
-        limit: 100
+        limit: 200
       }).then(res => {
           // if(res.length < 250) {
           //   return resolve()
           // }
-          res.pop()
+          if (res[res.length - 1].closeTime > Date.now()){
+            res.pop()
+          }
           let aiCandles = {}
           let ema_10 = this.ema(res, 10)
           let ema_30 = this.ema(res, 30)
           let relVol = this.rvol(res)
           let mfi = this.mfi(res)
-          let aiRes = res.slice(-20)
           let rsi = this.rsi(res)
           let macd = this.macd(res)
           let macdH = macd.map(v => v.histogram)
@@ -222,8 +223,9 @@ class Scanner extends EventEmitter {
           let cci = this.cci(res, 9)
 
           if(this.hour){
-            aiCandles.candles = Utils.prepAiData(aiRes, this.airsi(aiRes), this.aiobv(aiRes))
-            aiCandles.annState = this.processData(res)
+            let aiData = Utils.prepAiData(res)
+            aiCandles.candles = aiData
+            aiCandles.hopper = Utils.prepHopperData(res, this.airsi(res), this.aiobv(res))
             aiCandles.pair = pair
             aiCandles.frontEnd = frontEnd
             aiCandles.timestamp = Date.now()

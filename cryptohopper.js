@@ -16,9 +16,9 @@ tf.setBackend('cpu')
 
 const model = tf.loadModel('http://tvasconcelos.eu/model/cms/gru-model.json')
 
-const API_KEY = 'yl4txD45m4VyYO8amLNwTVmuELcnSc3z'
-const API_SECRET = 'I1uxDkGstUTRExx1mbWg8FarStUJ8ASdwK8ZCt7q30QX4bCEHBkDZ1ijDwPeMBEw'
-const SIGNALLER_ID = 224
+const API_KEY = process.env.HOPPER_KEY
+const API_SECRET = process.env.HOPPER_SECRET
+const SIGNALLER_ID = process.env.SIGNALLER_ID
 
 class Hopper {
     constructor() {
@@ -50,7 +50,7 @@ class Hopper {
             await prevPair
             return this.getPrediction({
                 pair: nextPair.pair,
-                candles: nextPair.candles
+                candles: nextPair.hopper
             })
         }, Promise.resolve())
     }
