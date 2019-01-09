@@ -203,11 +203,31 @@ class Scanner extends EventEmitter {
         symbol: pair,
         interval: '1h',
         limit: 200
+      }).then(_res => {
+          if (this.hour) {
+            let res = _res
+            let aiCandles = {}
+            
+            if (res[res.length - 1].closeTime > Date.now()) {
+              res.pop()
+            }
+
+            let aiData = Utils.prepAiData(res)
+            aiCandles.aiTest = res
+            aiCandles.candles = aiData
+            aiCandles.hopper = Utils.prepHopperData(res, this.airsi(res), this.aiobv(res))
+            aiCandles.pair = pair
+            aiCandles.frontEnd = res.slice(-20)
+            aiCandles.timestamp = Date.now()
+
+            this.AI.push(aiCandles)
+          }
+          
+          return _res
       }).then(res => {
           // if(res.length < 250) {
           //   return resolve()
           // }
-          let aiCandles = {}
           let ema_10 = this.ema(res, 10)
           let ema_30 = this.ema(res, 30)
           let relVol = this.rvol(res)
@@ -218,21 +238,6 @@ class Scanner extends EventEmitter {
           let frontEnd = res.slice(-20)
           let bbUp = this.bb(res).map(v => v.upper)
           let cci = this.cci(res, 9)
-
-          if(this.hour){
-            if(res[res.length - 1].closeTime > Date.now()) {
-              res.pop()
-            }
-            let aiData = Utils.prepAiData(res)
-            aiCandles.aiTest = res
-            aiCandles.candles = aiData
-            aiCandles.hopper = Utils.prepHopperData(res, this.airsi(res), this.aiobv(res))
-            aiCandles.pair = pair
-            aiCandles.frontEnd = frontEnd
-            aiCandles.timestamp = Date.now()
-  
-            this.AI.push(aiCandles)
-          }          
           
           res.reverse()
           
