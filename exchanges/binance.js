@@ -207,13 +207,11 @@ class Scanner extends EventEmitter {
           if (this.hour) {
             let res = _res
             let aiCandles = {}
-            
             if (res[res.length - 1].closeTime > Date.now()) {
               res.pop()
             }
-
+            
             let aiData = Utils.prepAiData(res)
-            aiCandles.aiTest = res
             aiCandles.candles = aiData
             aiCandles.hopper = Utils.prepHopperData(res, this.airsi(res), this.aiobv(res))
             aiCandles.pair = pair

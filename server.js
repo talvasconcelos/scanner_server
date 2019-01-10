@@ -82,10 +82,6 @@ scanner.on('foundPairs', (pairs) => {
   }
 })
 
-scanner.on('hopper', (pairs) => {
-  hopper.batchPredict(pairs)
-})
-
 scanner.on('aiPairs', (aipairs) => {
   WS.broadcastWS(aipairs)
   if(Array.isArray(aipairs) && aipairs.length){
