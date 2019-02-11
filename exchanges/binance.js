@@ -218,7 +218,7 @@ class Scanner extends EventEmitter {
             aiCandles.pair = pair
             aiCandles.frontEnd = res.slice(-20)
             aiCandles.timestamp = Date.now()
-
+            
             this.AI.push(aiCandles)
           }
           
@@ -345,7 +345,7 @@ class Scanner extends EventEmitter {
   	let hour
     await this.client.time().then(res => {
       hour = new Date(res.serverTime)
-      hour.getMinutes() < 10 ? this.hour = true : this.hour = true
+      hour.getMinutes() < 10 ? this.hour = true : this.hour = false
     	console.log('New scan:', hour)
     })
     let out = []
