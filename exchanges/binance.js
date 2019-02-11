@@ -345,7 +345,7 @@ class Scanner extends EventEmitter {
   	let hour
     await this.client.time().then(res => {
       hour = new Date(res.serverTime)
-      hour.getMinutes() < 10 ? this.hour = true : this.hour = false
+      hour.getMinutes() < 10 ? this.hour = true : this.hour = true
     	console.log('New scan:', hour)
     })
     let out = []
