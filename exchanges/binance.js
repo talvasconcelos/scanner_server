@@ -196,7 +196,7 @@ class Scanner extends EventEmitter {
 
   getCandles(pair){
     return new Promise(resolve => {
-      if(pair === '123456'){
+      if(pair === '123456' || pair.includes('BCC') || pair.includes('PAX')){
         return resolve()
       }
       this.client.klines({
@@ -204,9 +204,11 @@ class Scanner extends EventEmitter {
         interval: '1h',
         limit: 100
       }).then(_res => {
+          if(pair)
           if (this.hour) {
             let res = _res
             let aiCandles = {}
+            // console.log(pair, Utils.toDate(res[0].closeTime), Utils.toDate(res[res.length -1].closeTime))
             if (res[res.length - 1].closeTime > Date.now()) {
               res.pop()
             }
@@ -214,7 +216,7 @@ class Scanner extends EventEmitter {
             let aiData = Utils.prepAiData(res)
             aiCandles.test = res
             aiCandles.candles = aiData
-            aiCandles.hopper = Utils.prepHopperData(res, this.airsi(res), this.aiobv(res))
+            aiCandles.hopper = aiData//Utils.prepHopperData(res, this.airsi(res), this.aiobv(res))
             aiCandles.pair = pair
             aiCandles.frontEnd = res.slice(-20)
             aiCandles.timestamp = Date.now()

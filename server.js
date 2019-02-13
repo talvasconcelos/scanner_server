@@ -43,13 +43,13 @@ function telegramBroadcast(found){
       case (/(BTC)$/g).test(cur.pair):
         currency = 'BTC'
         break;
-      case (/(ETH)$/g).test(cur.pair):
+      case (/((ETH|XRP))$/g).test(cur.pair):
         currency = 'ETH'
         break;
       case (/(BNB)$/g).test(cur.pair):
         currency = 'BNB'
         break;
-      case (/(USDT)$/g).test(cur.pair):
+      case (/((USD.|TUSD|USD|PAX))$/).test(cur.pair):
         currency = 'USDT'
         break;
       default:
