@@ -65,7 +65,7 @@ class Hopper {
             return
         }
         const side = action === 0 ? 'buy' : 'sell'
-        console.log(`${opts.pair}: ${side}`)
+        console.log(`${opts.pair}: ${side} | Prob: ${P[action]}`)
         //console.log(P, action, X.dataSync())
 
         return this.processSignal({pair: opts.pair, side: side})        
