@@ -213,8 +213,7 @@ class Scanner extends EventEmitter {
               res.pop()
             }
             
-            let aiData = await Utils.prepAiData(res)
-            aiCandles.test = res
+            const aiData = await Utils.prepAiData(res)
             aiCandles.candles = aiData
             aiCandles.hopper = aiData//Utils.prepHopperData(res, this.airsi(res), this.aiobv(res))
             aiCandles.pair = pair
