@@ -202,8 +202,8 @@ class Scanner extends EventEmitter {
       this.client.klines({
         symbol: pair,
         interval: '1h',
-        limit: 100
-      }).then(_res => {
+        limit: 250
+      }).then(async _res => {
           if(pair)
           if (this.hour) {
             let res = _res
@@ -213,7 +213,7 @@ class Scanner extends EventEmitter {
               res.pop()
             }
             
-            let aiData = Utils.prepAiData(res)
+            let aiData = await Utils.prepAiData(res)
             aiCandles.test = res
             aiCandles.candles = aiData
             aiCandles.hopper = aiData//Utils.prepHopperData(res, this.airsi(res), this.aiobv(res))
