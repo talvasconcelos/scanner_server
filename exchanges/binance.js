@@ -203,7 +203,7 @@ class Scanner extends EventEmitter {
         symbol: pair,
         interval: '1h',
         limit: 100
-      }).then(async _res => {
+      }).then(_res => {
           if(_res.c < 99) {
             return
           }
@@ -215,7 +215,7 @@ class Scanner extends EventEmitter {
             if (res[res.length - 1].closeTime > Date.now()) {
               res.pop()
             }
-            const aiData = await Utils.prepAiData(res)
+            const aiData = Utils.prepAiData(res)
             aiCandles.candles = aiData
             aiCandles.hopper = aiData//Utils.prepHopperData(res, this.airsi(res), this.aiobv(res))
             aiCandles.pair = pair
