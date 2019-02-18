@@ -210,6 +210,7 @@ class Scanner extends EventEmitter {
           if (this.hour) {
             let res = _res
             let aiCandles = {}
+            aiCandles.AI = true
             // console.log(pair, Utils.toDate(res[0].closeTime), Utils.toDate(res[res.length -1].closeTime))
             if (res[res.length - 1].closeTime > Date.now()) {
               res.pop()
