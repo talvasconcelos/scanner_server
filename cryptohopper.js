@@ -58,6 +58,7 @@ class Hopper {
     async getPrediction(opts) {
         await model
         if(!this.model) return
+        if(!opts.candles) return
         const X = tf.tensor3d([opts.candles])
         const P = await this.model.predict(X).dataSync()
         const action = tf.argMax(P).dataSync()[0]
