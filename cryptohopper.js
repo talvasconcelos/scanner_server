@@ -51,7 +51,7 @@ class Hopper {
             return this.getPrediction({
                 pair: nextPair.pair,
                 candles: nextPair.hopper
-            })
+            }).catch(err => console.error(err))
         }, Promise.resolve())
     }
 
