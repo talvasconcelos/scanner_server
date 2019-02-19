@@ -204,7 +204,7 @@ class Scanner extends EventEmitter {
         interval: '1h',
         limit: 100
       }).then(_res => {
-          if(_res.length < 100) {
+          if(_res.length < 99) {
             return _res
           }
           if (this.hour) {
