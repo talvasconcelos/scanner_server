@@ -63,7 +63,8 @@ class Hopper {
         const X = tf.tensor3d([opts.candles])
         const P = await this.model.predict(X).dataSync()
         action = tf.argMax(P).dataSync()[0]
-        if (action === 2 || P[action] < 0.99 || isNaN(action)) {
+        if(isNaN(action)) {return}
+        if (action === 2 || P[action] < 0.99) {
             return
         }
         const side = action === 0 ? 'buy' : 'sell'
