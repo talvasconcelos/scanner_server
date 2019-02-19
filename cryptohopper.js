@@ -62,8 +62,10 @@ class Hopper {
         let action = 2
         const X = tf.tensor3d([opts.candles])
         const P = await this.model.predict(X).dataSync()
-        action = tf.argMax(P).dataSync()[0]
-        if(isNaN(action)) {return}
+        action = await tf.argMax(P).dataSync()[0]
+        if(isNaN(action)) {
+            return
+        }
         if (action === 2 || P[action] < 0.99) {
             return
         }
