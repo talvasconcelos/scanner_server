@@ -204,28 +204,28 @@ class Scanner extends EventEmitter {
         interval: '1h',
         limit: 100
       }).then(_res => {
-          if(_res.length < 99) {
+        if (this.hour) {
+          if (_res.length < 99) {
             return _res
           }
-          if (this.hour) {
-            let res = _res
-            let aiCandles = {}
-            aiCandles.AI = true
-            // console.log(pair, Utils.toDate(res[0].closeTime), Utils.toDate(res[res.length -1].closeTime))
-            if (res[res.length - 1].closeTime > Date.now()) {
-              res.pop()
-            }
-            const aiData = Utils.prepAiData(res)
-            aiCandles.candles = aiData
-            aiCandles.hopper = aiData//Utils.prepHopperData(res, this.airsi(res), this.aiobv(res))
-            aiCandles.pair = pair
-            aiCandles.frontEnd = res.slice(-20)
-            aiCandles.timestamp = Date.now()
-            
-            this.AI.push(aiCandles)
+          let res = _res
+          let aiCandles = {}
+          aiCandles.AI = true
+          // console.log(pair, Utils.toDate(res[0].closeTime), Utils.toDate(res[res.length -1].closeTime))
+          if (res[res.length - 1].closeTime > Date.now()) {
+            res.pop()
           }
-          
-          return _res
+          const aiData = Utils.prepAiData(res)
+          aiCandles.candles = aiData
+          aiCandles.hopper = aiData//Utils.prepHopperData(res, this.airsi(res), this.aiobv(res))
+          aiCandles.pair = pair
+          aiCandles.frontEnd = res.slice(-20)
+          aiCandles.timestamp = Date.now()
+
+          this.AI.push(aiCandles)
+        }
+
+        return _res
       }).then(res => {
           // if(res.length < 250) {
           //   return resolve()

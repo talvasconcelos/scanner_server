@@ -61,19 +61,17 @@ class Hopper {
         if(!opts.candles) {return}
         let action = 2
         const X = tf.tensor3d([opts.candles])
-        const P = await this.model.predict(X).dataSync()
-        action = await tf.argMax(P).dataSync()[0]
-        if(isNaN(action)) {
-            return
-        }
-        if (action === 2 || P[action] < 0.99) {
+        const P = this.model.predict(X).dataSync()
+        action = tf.argMax(P).dataSync()[0]
+        X.dispose()
+        if (action === 2 || P[action] < 0.95) {
             return
         }
         const side = action === 0 ? 'buy' : 'sell'
         console.log(`${opts.pair}: ${side} | Prob: ${P[action]}`)
         //console.log(P, action, X.dataSync())
 
-        return this.processSignal({pair: opts.pair, side: side})        
+        return this.processSignal({pair: opts.pair, side: side})
     }
 
     sendSignal(opts) {
