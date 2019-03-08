@@ -14,7 +14,7 @@ tf.setBackend('cpu')
 // const json = tf.loadModel('https://market-scanner.herokuapp.com/lib/models/lstm-model.json')
 // const bin = tf.loadModel('https://market-scanner.herokuapp.com/lib/models/lstm-model.weights.bin')
 
-const model = tf.loadModel('http://tvasconcelos.eu/model/cms/model/model.json')
+const model = tf.loadLayersModel('http://tvasconcelos.eu/model/cms/model/model.json')
 
 const API_KEY = process.env.HOPPER_KEY
 const API_SECRET = process.env.HOPPER_SECRET
@@ -59,15 +59,15 @@ class Hopper {
         await model
         if(!this.model) {return}
         if(!opts.candles) {return}
-        let action = 2
+        let action = 1
         const X = tf.tensor3d([opts.candles])
         const P = this.model.predict(X).dataSync()
         action = tf.argMax(P).dataSync()[0]
         X.dispose()
-        if (action === 2 || P[action] < 0.98) {
+        if (action === 1 || P[action] < 0.999) {
             return
         }
-        const side = action === 0 ? 'buy' : 'sell'
+        const side = 'buy'
         console.log(`${opts.pair}: ${side} | Prob: ${P[action]}`)
         //console.log(P, action, X.dataSync())
 

@@ -215,9 +215,9 @@ class Scanner extends EventEmitter {
           if (res[res.length - 1].closeTime > Date.now()) {
             res.pop()
           }
-          const aiData = Utils.prepAiData(res)
+          const aiData = Utils.prepAiDataTest(res)
           aiCandles.candles = aiData
-          aiCandles.testModel = Utils.prepAIDataTest(res)
+          // aiCandles.testModel = aiData//Utils.prepAIDataTest(res)
           //aiCandles.hopper = aiData//Utils.prepHopperData(res, this.airsi(res), this.aiobv(res))
           aiCandles.pair = pair
           aiCandles.frontEnd = res.slice(-20)
