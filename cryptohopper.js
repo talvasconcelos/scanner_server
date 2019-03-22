@@ -28,6 +28,7 @@ class Hopper {
         this.api_secret = API_SECRET
         this.signal_id = SIGNALLER_ID
         this.exchange = 'binance'
+        this.preds = []
         model
             .then(m => this.model = m)
             .then(() => this.model.summary())
@@ -46,6 +47,7 @@ class Hopper {
     }
 
     async batchPredict(pairs){
+        this.preds = []
         return pairs.reduce(async (prevPair, nextPair) => {
             await prevPair
             return this.getPrediction({
@@ -69,8 +71,8 @@ class Hopper {
         }
         const side = 'buy'
         console.log(`${opts.pair}: ${side} | Prob: ${P[action]}`)
+        this.preds.push({pair: opts.pair, prob: P[action]})
         //console.log(P, action, X.dataSync())
-
         return this.processSignal({pair: opts.pair, side: side})
     }
 

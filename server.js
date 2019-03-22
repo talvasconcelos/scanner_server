@@ -28,12 +28,19 @@ const hopper = new Hopper()
 //Scanner
 const scanner = new Scanner()
 scanner.start_scanning({time: 900000})
-let PAIR_CACHE, AI_PAIR_CACHE
+let PAIR_CACHE, AI_PAIR_CACHE, TRADER
 let currencies = ['BTC', 'ETH', 'BNB', 'USDT']
 
 WS.wss.on('connection', (ws) => {
-	ws.send(JSON.stringify(AI_PAIR_CACHE))
-	ws.send(JSON.stringify(PAIR_CACHE))
+  if(AI_PAIR_CACHE.length > 0){
+    ws.send(JSON.stringify(AI_PAIR_CACHE))
+  }
+	if(PAIR_CACHE.length > 0){
+    ws.send(JSON.stringify(PAIR_CACHE))
+  }
+	if(TRADER.length > 0){
+    ws.send(JSON.stringify(TRADER))
+  }
 })
 
 function telegramBroadcast(found){
@@ -88,7 +95,17 @@ scanner.on('aiPairs', (aipairs) => {
     AI_PAIR_CACHE = aipairs
   }
   
-  hopper.batchPredict(aipairs)
+  hopper.batchPredict(aipairs).then(() => {
+    const msg = {
+      to: 'trader',
+      timestamp: new Date().getTime(),
+      data: hopper.preds
+    }
+    WS.broadcastWS(msg)
+    TRADER = msg
+    return
+    //console.log(hopper.preds)
+  })
   //console.log(aipairs)
 })
 
