@@ -38,7 +38,7 @@ WS.wss.on('connection', (ws) => {
 	if(PAIR_CACHE.length > 0){
     ws.send(JSON.stringify(PAIR_CACHE))
   }
-	if (TRADER.data.length > 0) {
+	if (TRADER.data && TRADER.data.length > 0) {
     ws.send(JSON.stringify(TRADER))
   }
 })
