@@ -8,7 +8,7 @@ const app = polka()
 const Utils = require('./lib/utils')
 const { PORT=3000 } = process.env
 
-let PAIR_CACHE, AI_PAIR_CACHE, TRADER
+let PAIR_CACHE, AI_PAIR_CACHE, TRADER = [false, false, false]
 
 const INDEX = path.join(__dirname, 'index.html')
 
@@ -39,7 +39,7 @@ WS.wss.on('connection', (ws) => {
 	if(PAIR_CACHE && PAIR_CACHE.length > 0){
     ws.send(JSON.stringify(PAIR_CACHE))
   }
-	if(TRADER.data && TRADER.data.length > 0) {
+	if(TRADER && TRADER.data.length > 0) {
     ws.send(JSON.stringify(TRADER))
   }
 })
