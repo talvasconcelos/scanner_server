@@ -8,6 +8,8 @@ const app = polka()
 const Utils = require('./lib/utils')
 const { PORT=3000 } = process.env
 
+let PAIR_CACHE, AI_PAIR_CACHE, TRADER
+
 const INDEX = path.join(__dirname, 'index.html')
 
 app.use((req, res) => res.end(new Date().toTimeString()))
@@ -28,17 +30,16 @@ const hopper = new Hopper()
 //Scanner
 const scanner = new Scanner()
 scanner.start_scanning({time: 900000})
-let PAIR_CACHE, AI_PAIR_CACHE, TRADER
 let currencies = ['BTC', 'ETH', 'BNB', 'USDT']
 
 WS.wss.on('connection', (ws) => {
-  if(AI_PAIR_CACHE.length > 0){
+  if(AI_PAIR_CACHE && AI_PAIR_CACHE.length > 0){
     ws.send(JSON.stringify(AI_PAIR_CACHE))
   }
-	if(PAIR_CACHE.length > 0){
+	if(PAIR_CACHE && PAIR_CACHE.length > 0){
     ws.send(JSON.stringify(PAIR_CACHE))
   }
-	if (TRADER.data && TRADER.data.length > 0) {
+	if(TRADER.data && TRADER.data.length > 0) {
     ws.send(JSON.stringify(TRADER))
   }
 })
