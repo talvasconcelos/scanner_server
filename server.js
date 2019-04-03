@@ -38,7 +38,7 @@ WS.wss.on('connection', (ws) => {
 	if(PAIR_CACHE.length > 0){
     ws.send(JSON.stringify(PAIR_CACHE))
   }
-	if(TRADER.length > 0){
+	if (TRADER.data.length > 0) {
     ws.send(JSON.stringify(TRADER))
   }
 })
@@ -103,8 +103,7 @@ scanner.on('aiPairs', (aipairs) => {
     }
     WS.broadcastWS(msg)
     TRADER = msg
-    return
-    //console.log(hopper.preds)
+    console.log(TRADER)
   })
   //console.log(aipairs)
 })
