@@ -28,6 +28,7 @@ class Hopper {
         this.api_secret = API_SECRET
         this.signal_id = SIGNALLER_ID
         this.exchange = 'binance'
+        this.preds = []
         model
             .then(m => this.model = m)
             .then(() => this.model.summary())
@@ -46,6 +47,7 @@ class Hopper {
     }
 
     async batchPredict(pairs){
+        this.preds = []
         return pairs.reduce(async (prevPair, nextPair) => {
             await prevPair
             return this.getPrediction({
@@ -59,18 +61,18 @@ class Hopper {
         await model
         if(!this.model) {return}
         if(!opts.candles) {return}
-        let action = 2
+        let action = 1
         const X = tf.tensor3d([opts.candles])
         const P = this.model.predict(X).dataSync()
         action = tf.argMax(P).dataSync()[0]
         X.dispose()
-        if (action === 2 || P[action] < 0.98) {
+        if (action === 1 || P[action] < 0.999) {
             return
         }
-        const side = action === 0 ? 'buy' : 'sell'
+        const side = 'buy'
         console.log(`${opts.pair}: ${side} | Prob: ${P[action]}`)
+        this.preds.push({pair: opts.pair, prob: P[action]})
         //console.log(P, action, X.dataSync())
-
         return this.processSignal({pair: opts.pair, side: side})
     }
 
