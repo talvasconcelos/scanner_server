@@ -317,7 +317,7 @@ class Scanner extends EventEmitter {
         let vol = 0
         switch (true) {
           case (/(BTC)$/g).test(v.symbol):
-          vol = 75
+          vol = 100
           break;
           case (/(ETH)$/g).test(v.symbol):
           vol = 1000
