@@ -14,7 +14,7 @@ tf.setBackend('cpu')
 // const json = tf.loadModel('https://market-scanner.herokuapp.com/lib/models/lstm-model.json')
 // const bin = tf.loadModel('https://market-scanner.herokuapp.com/lib/models/lstm-model.weights.bin')
 
-const model = tf.loadLayersModel('http://tvasconcelos.eu/model/cms/model_02/model.json')
+const model = tf.loadLayersModel('http://tvasconcelos.eu/model/cms/conv_model/model/model.json')
 
 const API_KEY = process.env.HOPPER_KEY
 const API_SECRET = process.env.HOPPER_SECRET
@@ -52,7 +52,7 @@ class Hopper {
             await prevPair
             return this.getPrediction({
                 pair: nextPair.pair,
-                candles: nextPair.candles
+                candles: nextPair.hopper//candles
             }).catch(err => console.error(err))
         }, Promise.resolve())
     }

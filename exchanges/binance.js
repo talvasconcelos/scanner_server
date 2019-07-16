@@ -217,8 +217,8 @@ class Scanner extends EventEmitter {
           }
           const aiData = Utils.prepAIDataTest(res)
           aiCandles.candles = aiData
-          aiCandles.testModel = aiData//Utils.prepAIDataTest(res)
-          //aiCandles.hopper = aiData//Utils.prepHopperData(res, this.airsi(res), this.aiobv(res))
+          //aiCandles.testModel = aiData//Utils.prepAIDataTest(res)
+          aiCandles.hopper = Utils.prepAiData(res)
           aiCandles.pair = pair
           aiCandles.frontEnd = res.slice(-20)
           aiCandles.timestamp = Date.now()
