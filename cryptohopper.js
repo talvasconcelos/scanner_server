@@ -46,13 +46,14 @@ class Hopper {
         }, Promise.resolve())
     }
 
-    async batchPredict(pairs){
+    async batchPredict(pairs, send = true){
         this.preds = []
         return pairs.reduce(async (prevPair, nextPair) => {
             await prevPair
             return this.getPrediction({
                 pair: nextPair.pair,
-                candles: nextPair.hopper//candles
+                candles: nextPair.hopper,//candles
+                send
             }).catch(err => console.error(err))
         }, Promise.resolve())
     }
@@ -63,10 +64,10 @@ class Hopper {
         if(!opts.candles) {return}
         let action = 1
         const X = tf.tensor3d([opts.candles])
-        const P = this.model.predict(X).dataSync()
-        action = P//tf.argMax(P).dataSync()[0]
+        const P = this.model.predict(X).dataSync()[0]
+        //action = P//tf.argMax(P).dataSync()[0]
         X.dispose()
-        if (action < 0.99/*action === 1 || P[action] < 0.99*/) {
+        if (P < 0.99/*action === 1 || P[action] < 0.99*/) {
             return
         }
         const side = 'buy'
@@ -75,7 +76,7 @@ class Hopper {
         //this.preds.push({pair: opts.pair, prob: P[action]})
         this.preds.push({pair: opts.pair, prob: P})
         //console.log(P, action, X.dataSync())
-        return this.processSignal({pair: opts.pair, side: side})
+        return otps.send ? this.processSignal({pair: opts.pair, side: side}) : console.log({pair: opts.pair, side: side})
     }
 
     sendSignal(opts) {

@@ -216,13 +216,13 @@ class Scanner extends EventEmitter {
             res.pop()
           }
           const aiData = Utils.prepAIDataTest(res)
+          const aiHopper = Utils.prepAiData(res)
           aiCandles.candles = aiData
           //aiCandles.testModel = aiData//Utils.prepAIDataTest(res)
-          aiCandles.hopper = Utils.prepAiData(res)
+          aiCandles.hopper = aiHopper
           aiCandles.pair = pair
           aiCandles.frontEnd = res.slice(-20)
           aiCandles.timestamp = Date.now()
-
           this.AI.push(aiCandles)
         }
 
@@ -361,7 +361,7 @@ class Scanner extends EventEmitter {
       const candles = await this.getCandles(symbol)
       out.push(candles)
     }
-    
+        
     if (this.hour) {
       this.emit('aiPairs', this.AI)
     }
