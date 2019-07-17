@@ -72,7 +72,8 @@ class Hopper {
         const side = 'buy'
         console.log(`${opts.pair}: ${side} | Prob: ${P}`)
         //console.log(`${opts.pair}: ${side} | Prob: ${P[action]}`)
-        this.preds.push({pair: opts.pair, prob: P[action]})
+        //this.preds.push({pair: opts.pair, prob: P[action]})
+        this.preds.push({pair: opts.pair, prob: P})
         //console.log(P, action, X.dataSync())
         return this.processSignal({pair: opts.pair, side: side})
     }
