@@ -66,7 +66,7 @@ class Hopper {
         const P = this.model.predict(X).dataSync()
         action = tf.argMax(P).dataSync()[0]
         X.dispose()
-        if (action === 1 || P[action] < 0.999) {
+        if (action === 1 || P[action] < 0.99) {
             return
         }
         const side = 'buy'
