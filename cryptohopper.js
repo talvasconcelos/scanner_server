@@ -65,7 +65,7 @@ class Hopper {
         if(!opts.candles) {return}
         let action = 1
         const X = tf.tensor3d([opts.candles])
-        // const P = this.model.predict(X).dataSync()[0]
+        const P = this.model.predict(X).dataSync()[0]
         action = tf.argMax(P).dataSync()[0]
         X.dispose()
         if (action === 1 || P[action] < 0.99) {
