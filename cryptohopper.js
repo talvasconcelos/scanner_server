@@ -77,7 +77,7 @@ class Hopper {
         this.preds.push({pair: opts.pair, prob: P[action]})
         // this.preds.push({pair: opts.pair, prob: P})
         //console.log(P, action, X.dataSync())
-        return otps.send ? this.processSignal({pair: opts.pair, side: side}) : console.log({pair: opts.pair, side: side})
+        return opts.send ? this.processSignal({pair: opts.pair, side: side}) : console.log({pair: opts.pair, side: side})
     }
 
     sendSignal(opts) {
