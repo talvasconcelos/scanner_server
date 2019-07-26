@@ -99,11 +99,11 @@ scanner.on('aiPairs', (aipairs) => {
   }
   
   hopper.batchPredict(aipairs)
-  trader.batchPredict(aipairs).then(res => {
+  trader.batchPredict(aipairs).then(() => {
     const msg = {
       to: 'trader',
       timestamp: new Date().getTime(),
-      data: res
+      data: trader.preds
     }
     WS.broadcastWS(msg)
     TRADER = msg

@@ -40,9 +40,7 @@ class CMSPredict {
         }
         const side = 'buy'
         console.log(`${opts.pair}: ${side} | Prob: ${P}`)        
-        this.preds.push({pair: opts.pair, prob: P})
-        
-        return this.preds
+        return this.preds.push({pair: opts.pair, prob: P})
     }
 }
 
