@@ -22,7 +22,9 @@ const WS = require('./lib/websocket')({server: app.server})
 
 const Scanner = require('./exchanges/binance')
 const Hopper = require('./cryptohopper')
+const Trader = require('./cmstrader')
 const hopper = new Hopper()
+const trader = new Trader()
 // const Slimbot = require('slimbot');
 // const slimbot = new Slimbot(process.env.TELEGRAM_TOKEN)
 // slimbot.startPolling()
@@ -96,16 +98,27 @@ scanner.on('aiPairs', (aipairs) => {
     AI_PAIR_CACHE = aipairs
   }
   
-  hopper.batchPredict(aipairs).then(() => {
+  hopper.batchPredict(aipairs)
+  trader.batchPredict(aipairs).then(res => {
     const msg = {
       to: 'trader',
       timestamp: new Date().getTime(),
-      data: hopper.preds
+      data: res
     }
     WS.broadcastWS(msg)
     TRADER = msg
     console.log(TRADER)
   })
+    // .then(() => {
+    //   const msg = {
+    //     to: 'trader',
+    //     timestamp: new Date().getTime(),
+    //     data: hopper.preds
+    // }
+  //   WS.broadcastWS(msg)
+  //   TRADER = msg
+  //   console.log(TRADER)
+  // })
   //console.log(aipairs)
 })
 

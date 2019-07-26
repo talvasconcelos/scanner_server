@@ -5,7 +5,7 @@ const continuous = require('continuous')
 const Utils = require('../lib/utils')
 const tech = require('technicalindicators')
 const api = require('binance')
-const lstm = require('../lib/lstm')
+// const lstm = require('../lib/lstm')
 
 tech.setConfig('precision', 8)
 
@@ -216,10 +216,10 @@ class Scanner extends EventEmitter {
             res.pop()
           }
           const aiData = Utils.prepAIDataTest(res)
-          const aiHopper = Utils.prepAiData(res)
+          const aiTrader = Utils.prepAiData(res)
           aiCandles.candles = aiData
           //aiCandles.testModel = aiData//Utils.prepAIDataTest(res)
-          aiCandles.hopper = aiHopper
+          aiCandles.trader = aiTrader
           aiCandles.pair = pair
           aiCandles.frontEnd = res.slice(-20)
           aiCandles.timestamp = Date.now()
@@ -332,7 +332,7 @@ class Scanner extends EventEmitter {
           vol = 100
           break;
         }
-        return v.quoteVolume >= vol
+        return v.volume >= vol
       })
       .map(e => e.symbol)
     this._allTickers = pairs

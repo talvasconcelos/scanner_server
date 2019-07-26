@@ -6,8 +6,7 @@ const request = require('request')
 const tf = require('@tensorflow/tfjs')
 
 //require('@tensorflow/tfjs-node')
-
-tf.setBackend('cpu')
+// tf.setBackend('cpu')
 
 // https://market-scanner.herokuapp.com/
 
