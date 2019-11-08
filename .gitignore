@@ -60,6 +60,7 @@ typings/
 # config file
 config.js
 
-test.js
+#test.js
 data.json
+output.json
 

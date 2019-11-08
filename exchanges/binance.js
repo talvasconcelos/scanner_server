@@ -3,6 +3,7 @@ const fs = require('fs')
 const EventEmitter = require('events')
 const continuous = require('continuous')
 const Utils = require('../lib/utils')
+const cmsData = require('../lib/cmsdata')
 const tech = require('technicalindicators')
 const api = require('binance')
 // const lstm = require('../lib/lstm')
@@ -216,7 +217,7 @@ class Scanner extends EventEmitter {
             res.pop()
           }
           const aiData = Utils.prepAIDataTest(res)
-          const aiTrader = Utils.prepAiData(res)
+          const aiTrader = cmsData.prepareData(res)
           aiCandles.candles = aiData
           //aiCandles.testModel = aiData//Utils.prepAIDataTest(res)
           aiCandles.trader = aiTrader
