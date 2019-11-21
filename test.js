@@ -33,7 +33,7 @@ const appendToJson = async (pair, candles) => {
 
 const getPairs = async () => {
     let pairs = await api.ticker24hr()
-    console.log(pairs)
+    // console.log(pairs)
     return pairs
         .filter(v => (/(BTC)$/g).test(v.symbol))
         .filter(v => v.volume >= 150 && v.weightedAvgPrice > 0.00000199)

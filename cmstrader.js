@@ -54,7 +54,7 @@ class CMSPredict {
             return
         }
         const side = 'buy'
-        console.log(`${opts.pair}: ${side} | Prob: ${P+100}%`)        
+        console.log(`${opts.pair}: ${side} | Prob: ${P}`)        
         return this.preds.push({pair: opts.pair, prob: P})
     }
 }
