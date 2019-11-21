@@ -49,7 +49,7 @@ class CMSPredict {
         // const X = tf.tensor3d([opts.candles])
         // const P = this.model.predict(X).dataSync()[0]
         // X.dispose()
-        const sigmoid = (x) => (1 / (1 + Math.exp(-x)))
+        // const sigmoid = (x) => (1 / (1 + Math.exp(-x)))
         if (P < 0.75) {
             return
         }

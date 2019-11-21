@@ -318,7 +318,7 @@ class Scanner extends EventEmitter {
         let vol = 0
         switch (true) {
           case (/(BTC)$/g).test(v.symbol):
-          vol = 85
+          vol = 150
           break;
           case (/(ETH)$/g).test(v.symbol):
           vol = 1000
@@ -335,6 +335,7 @@ class Scanner extends EventEmitter {
         }
         return v.volume >= vol
       })
+      .filter(v => (/(BTC)$/g).test(v.symbol) && v.weightedAvgPrice > 0.00000199)
       .map(e => e.symbol)
     this._allTickers = pairs
     return pairs
