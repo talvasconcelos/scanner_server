@@ -67,4 +67,4 @@ getPairs().then(res => {
         await prevPair
         return getPred(nextPair).catch(err => console.error(err))
     }, Promise.resolve())
-})
+}).then(() => console.log('Done!'))

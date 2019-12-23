@@ -13,8 +13,11 @@ const tf = require('@tensorflow/tfjs')
 // const json = tf.loadModel('https://market-scanner.herokuapp.com/lib/models/lstm-model.json')
 // const bin = tf.loadModel('https://market-scanner.herokuapp.com/lib/models/lstm-model.weights.bin')
 
-const model = tf.loadLayersModel('http://tvasconcelos.eu/model/cms/model_02/model.json')
+// const model = tf.loadLayersModel('http://tvasconcelos.eu/model/cms/model_02/model.json')
 // const model = tf.loadLayersModel('http://tvasconcelos.eu/model/cms/conv_model/model/model.json')
+
+const encoder = tf.loadLayersModel('http://tvasconcelos.eu/model/cms/uber_arch/encoder/model.json')
+const model = tf.loadLayersModel('http://tvasconcelos.eu/model/cms/uber_arch/model/model.json')
 
 const API_KEY = process.env.HOPPER_KEY
 const API_SECRET = process.env.HOPPER_SECRET
@@ -29,10 +32,16 @@ class Hopper {
         this.signal_id = SIGNALLER_ID
         this.exchange = 'binance'
         this.preds = []
+        encoder
+            .then(e => this.encoder = e)
+            .catch(err => console.error(err))
         model
             .then(m => this.model = m)
-            .then(() => this.model.summary())
             .catch(err => console.error(err))
+        // model
+        //     .then(m => this.model = m)
+        //     .then(() => this.model.summary())
+        //     .catch(err => console.error(err))
         
     }
 
@@ -52,13 +61,37 @@ class Hopper {
             await prevPair
             return this.getPrediction({
                 pair: nextPair.pair,
-                candles: nextPair.candles,//hopper
+                candles: nextPair.trader,//candles
                 send
             }).catch(err => console.error(err))
         }, Promise.resolve())
     }
 
     async getPrediction(opts) {
+        if(!this.model || !this.encoder) {return}
+        if(!opts.candles) {return}
+        // console.log(opts.candles)
+        const AE = tf.tensor3d([opts.candles[0]])
+        const X = tf.tensor3d([opts.candles[1]])
+        const AEX = await this.encoder.predict(AE)
+        const AEXX = tf.concat([AEX, X], 2)
+        const P = await this.model.predict(AEXX).dataSync()[0]
+        AE.dispose()
+        X.dispose()
+        AEX.dispose()
+        AEXX.dispose()
+
+        if (P < 0.9) {
+            return
+        }
+
+        const side = 'buy'
+        console.log(`${opts.pair}: ${side} | Prob: ${P}`)
+        this.preds.push({pair: opts.pair, prob: P})
+        return opts.send ? this.processSignal({pair: opts.pair, side: side}) : console.log({pair: opts.pair, side: side})
+    }
+
+    /*async getPrediction(opts) {
         await model
         if(!this.model) {return}
         if(!opts.candles) {return}
@@ -77,7 +110,7 @@ class Hopper {
         // this.preds.push({pair: opts.pair, prob: P})
         //console.log(P, action, X.dataSync())
         return opts.send ? this.processSignal({pair: opts.pair, side: side}) : console.log({pair: opts.pair, side: side})
-    }
+    }*/
 
     sendSignal(opts) {
         const headers = {
