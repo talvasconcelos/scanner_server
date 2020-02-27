@@ -32,6 +32,7 @@ class Hopper {
         this.signal_id = SIGNALLER_ID
         this.exchange = 'binance'
         this.preds = []
+        this.bittrexPairs = this.getBittrex
         encoder
             .then(e => this.encoder = e)
             .catch(err => console.error(err))
@@ -43,6 +44,18 @@ class Hopper {
         //     .then(() => this.model.summary())
         //     .catch(err => console.error(err))
         
+    }
+
+    async getBittrex(){
+        const bittrexPairs = await fetch('https://api.bittrex.com/api/v1.1/public/getmarkets')
+            .then(res =>res.json())
+            .then(pairs => {
+                return pairs.result
+                    .filter(v => v.BaseCurrency === 'BTC' && v.IsActive)
+                    .map(c => `${c.MarketCurrency}${c.BaseCurrency}`)
+            })
+            .catch(err => console.error(err))
+        return bittrexPairs
     }
 
     async batchSignal(pairs){
@@ -144,10 +157,19 @@ class Hopper {
         //const path = '/testsignal.php?api_key=' + this.api_key + '&signal_id=' + this.signal_id + '&exchange=' + this.exchange + '&market=' + market + '&type=' + type
         const path = `/signal.php?api_key=${this.api_key}&signal_id=${this.signal_id}&exchange=${this.exchange}&market=${market}&type=${type}`
         const signature = this.hashSignature(path)
-        return this.sendSignal({
+        this.sendSignal({
             path,
             signature
         })
+        if(this.bittrexPairs.includes(market)){
+            const bittrexPath = `/signal.php?api_key=${this.api_key}&signal_id=${this.signal_id}&exchange=bittrex&market=${market}&type=${type}`
+            const bittrexSignature = this.hashSignature(path)
+            this.sendSignal({
+                path,
+                signature
+            })
+        }
+        return
     }
 }
 

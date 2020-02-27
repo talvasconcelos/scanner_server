@@ -1,3 +1,4 @@
+global.fetch = require('node-fetch')
 const fs = require('fs')
 const API = require('binance')
 const Trader = require('./cmstrader')
@@ -61,10 +62,10 @@ const getPred = (pair) => {
     }).catch(console.error)
 }
 
-getPairs().then(res => {
-    // console.log(res)
-    return res.reduce(async (prevPair, nextPair) => {
-        await prevPair
-        return getPred(nextPair).catch(err => console.error(err))
-    }, Promise.resolve())
-}).then(() => console.log('Done!'))
+// getPairs().then(res => {
+//     // console.log(res)
+//     return res.reduce(async (prevPair, nextPair) => {
+//         await prevPair
+//         return getPred(nextPair).catch(err => console.error(err))
+//     }, Promise.resolve())
+// }).then(() => console.log('Done!'))
