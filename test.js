@@ -69,3 +69,17 @@ const getPred = (pair) => {
 //         return getPred(nextPair).catch(err => console.error(err))
 //     }, Promise.resolve())
 // }).then(() => console.log('Done!'))
+
+const getBittrex = async () => {
+    const bittrexPairs = await fetch('https://api.bittrex.com/api/v1.1/public/getmarkets')
+        .then(res =>res.json())
+        .then(pairs => {
+            return pairs.result
+                .filter(v => v.BaseCurrency === 'BTC' && v.IsActive)
+                .map(c => `${c.MarketCurrency}${c.BaseCurrency}`)
+        })
+        .catch(err => console.error(err))
+    return bittrexPairs
+}
+
+getBittrex().then(console.log)

@@ -32,7 +32,7 @@ class Hopper {
         this.signal_id = SIGNALLER_ID
         this.exchange = 'binance'
         this.preds = []
-        this.bittrexPairs = this.getBittrex
+        this.bittrexPairs = this.getBittrex()
         encoder
             .then(e => this.encoder = e)
             .catch(err => console.error(err))
