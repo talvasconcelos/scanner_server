@@ -164,7 +164,8 @@ class Hopper {
             signature
         })
         if(this.bittrexPairs.includes(market)){
-            const bittrexPath = `/signal.php?api_key=${this.api_key}&signal_id=${this.signal_id}&exchange=bittrex&market=${market}&type=${type}`
+            const bittrexPair = `BTC-${market.split('BTC')[0]}`
+            const bittrexPath = `/signal.php?api_key=${this.api_key}&signal_id=${this.signal_id}&exchange=bittrex&market=${bittrexPair}&type=${type}`
             const bittrexSignature = this.hashSignature(path)
             this.sendSignal({
                 path,
