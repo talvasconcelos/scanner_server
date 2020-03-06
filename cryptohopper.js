@@ -169,7 +169,7 @@ class Hopper {
             const bittrexSignature = this.hashSignature(bittrexPath)
             
             this.sendSignal({
-                path,
+                path: bittrexPath,
                 signature: bittrexSignature
             })
         }
