@@ -166,11 +166,11 @@ class Hopper {
         if(this.bittrexPairs.includes(market)){
             const bittrexPair = `BTC-${market.split('BTC')[0]}`
             const bittrexPath = `/signal.php?api_key=${this.api_key}&signal_id=${this.signal_id}&exchange=bittrex&market=${bittrexPair}&type=${type}`
-            const bittrexSignature = this.hashSignature(path)
-            console.log(bittrexPath)
+            const bittrexSignature = this.hashSignature(bittrexPath)
+            
             this.sendSignal({
                 path,
-                signature
+                signature: bittrexSignature
             })
         }
         return
