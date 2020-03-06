@@ -81,5 +81,13 @@ const getBittrex = async () => {
         .catch(err => console.error(err))
     return bittrexPairs
 }
-
-getBittrex().then(console.log)
+getPairs()
+    .then(async pairs => {
+        const bitPairs = await getBittrex()
+        bitPairs.map(p => {
+            if(pairs.includes(p)){
+                const bittrexPair = `BTC-${p.split('BTC')[0]}`
+                console.log(bittrexPair)
+            }
+        })
+    })
